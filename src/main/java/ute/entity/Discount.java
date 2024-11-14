@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,6 +15,7 @@ public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(columnDefinition = "nvarchar(10)")
     private String code;
     @Column(columnDefinition = "nvarchar(20)")
@@ -30,5 +30,5 @@ public class Discount {
     private Integer quantity;
 
     @OneToMany(mappedBy = "discount")
-    private List<Order> orders;
+    private List<Orders> orders;
 }

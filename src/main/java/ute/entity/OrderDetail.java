@@ -21,5 +21,5 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "fk_order")
-    private Order order;
+    private Orders orders;
 }

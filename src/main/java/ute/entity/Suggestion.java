@@ -12,10 +12,6 @@ public class Suggestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_account")
-    private Account account;
-
     @Column(columnDefinition = "nvarchar(50)")
     private String type;
     @Column(columnDefinition = "nvarchar(100)")
@@ -24,4 +20,8 @@ public class Suggestion {
     private String content;
     @Column
     private Boolean seen;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_account")
+    private Account account;
 }

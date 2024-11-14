@@ -14,6 +14,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(columnDefinition = "nvarchar(MAX)")
+    private String content;
+    @Column(columnDefinition = "date")
+    private LocalDateTime post_date;
+
     @ManyToOne
     @JoinColumn(name = "fk_chapter")
     private Chapter chapter;
@@ -22,8 +27,4 @@ public class Comment {
     @JoinColumn(name="fk_account")
     private Account account;
 
-    @Column(columnDefinition = "nvarchar(MAX)")
-    private String content;
-    @Column(columnDefinition = "date")
-    private LocalDateTime post_date;
 }

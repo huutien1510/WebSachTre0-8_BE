@@ -13,6 +13,11 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column
+    private Float star;
+    @Column(columnDefinition = "date")
+    private Date date_rate;
+
     @ManyToOne
     @JoinColumn(name = "fk_book")
     private Book book;
@@ -20,10 +25,5 @@ public class Rating {
     @ManyToOne
     @JoinColumn(name = "fk_account")
     private Account account;
-
-    @Column
-    private Float star;
-    @Column(columnDefinition = "date")
-    private Date date_rate;
 
 }

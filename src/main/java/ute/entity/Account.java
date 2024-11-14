@@ -3,7 +3,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.swing.*;
 import java.util.List;
 
 @AllArgsConstructor
@@ -40,7 +39,7 @@ public class Account {
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Comment> comments;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
-    private List<Order> orders;
+    private List<Orders> orders;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Contestant> contestants;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
