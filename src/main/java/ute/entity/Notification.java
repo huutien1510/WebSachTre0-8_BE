@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -19,4 +21,7 @@ public class Notification {
     private String content;
     @Column(columnDefinition = "date")
     private LocalDateTime date;
+
+    @ManyToMany(mappedBy = "notifications")
+    private List<Account> accounts;
 }

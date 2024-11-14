@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,4 +28,7 @@ public class Discount {
     private LocalDateTime end_date;
     @Column
     private Integer quantity;
+
+    @OneToMany(mappedBy = "discount")
+    private List<Order> orders;
 }

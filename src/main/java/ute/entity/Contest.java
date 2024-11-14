@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -22,4 +24,6 @@ public class Contest {
     private LocalDateTime end_date;
     @Column
     private Integer contestant_count;
+    @OneToMany(mappedBy = "contest",cascade = CascadeType.ALL)
+    private List<Contestant> contestants;
 }

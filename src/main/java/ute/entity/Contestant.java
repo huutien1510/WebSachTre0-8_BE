@@ -14,10 +14,15 @@ public class Contestant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_contest")
     private Contest contest;
+
     @ManyToOne
     @JoinColumn(name = "fk_account")
     private Account account;
+
     @Column(columnDefinition = "nvarchar(100)")
     private String submission;
     @Column(columnDefinition = "date")

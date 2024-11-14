@@ -3,6 +3,8 @@ package ute.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,12 +13,17 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_chapter")
     private Chapter chapter;
+
     @ManyToOne
     @JoinColumn(name="fk_account")
     private Account account;
+
     @Column(columnDefinition = "nvarchar(MAX)")
     private String content;
     @Column(columnDefinition = "date")
-    private Date post_date;
+    private LocalDateTime post_date;
 }

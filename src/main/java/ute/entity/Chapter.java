@@ -19,5 +19,17 @@ public class Chapter {
     private Date date;
     @Column
     private Integer view;
+
+    @ManyToMany(mappedBy = "chapters")
+    private List<Account> accounts;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_book")
+    private Book book;
+
+    @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
     private List<ChapterContent> chapterContents;
+
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }

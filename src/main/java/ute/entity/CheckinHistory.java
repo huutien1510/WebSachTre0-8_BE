@@ -13,9 +13,11 @@ public class CheckinHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "fk_account")
     private Account account;
+
     @Column
     private Integer bonus_point;
     @Column(columnDefinition = "date")

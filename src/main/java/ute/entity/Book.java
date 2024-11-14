@@ -18,7 +18,15 @@ public class Book {
     private String author;
     @Column(columnDefinition = "nvarchar(MAX)")
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = @JoinColumn(name = "fk_book"),
+            inverseJoinColumns = @JoinColumn(name = "fk_genre")
+    )
     private List<Genre> genres;
+
     @Column(columnDefinition = "nvarchar(20)")
     private String type;
     @Column(columnDefinition = "nvarchar(50)")
@@ -29,5 +37,16 @@ public class Book {
     private String keysearch;
     @Column
     private Boolean is_delete;
+
+    @OneToOne(mappedBy = "book")
+    private OrderDetail orderDetail;
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<Chapter> chapters;
+
+    @ManyToMany(mappedBy = "books")
+    private List<Cart> carts;
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    private List<Rating> ratings;
 }

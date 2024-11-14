@@ -29,8 +29,10 @@ public class Account {
     private Integer bonus_point;
     @Column(columnDefinition = "varchar(50)")
     private String avatar;
+
     @OneToOne(mappedBy = "account",cascade = CascadeType.ALL)
     private Cart carts;
+
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<CheckinHistory> checkinHistory;
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
@@ -44,7 +46,28 @@ public class Account {
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Suggestion> suggestions;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "account_item",
+            joinColumns = @JoinColumn(name = "fk_account"),
+            inverseJoinColumns = @JoinColumn(name = "fk_item")
+    )
+    private List<Item> items;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "account_notification",
+            joinColumns = @JoinColumn(name = "fk_account"),
+            inverseJoinColumns = @JoinColumn(name = "fk_notification")
+    )
+    private List<Notification> notifications;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "account_chapter",
+            joinColumns = @JoinColumn(name = "fk_account"),
+            inverseJoinColumns = @JoinColumn(name = "fk_chapter")
+    )
+    private List<Chapter> chapters;
 
 }

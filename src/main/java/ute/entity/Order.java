@@ -25,8 +25,15 @@ public class Order {
     private String payment_method;
     @Column(columnDefinition = "nvarchar(20)")
     private String status;
+
+    @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
+
     @ManyToOne
     @JoinColumn(name = "fk_account")
     private Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_discount")
+    private Discount discount;
 }
