@@ -25,6 +25,8 @@ public class Account {
     @Column
     private Boolean is_admin;
     @Column
+    private Boolean is_delete;
+    @Column
     private Integer bonus_point;
     @Column(columnDefinition = "varchar(50)")
     private String avatar;

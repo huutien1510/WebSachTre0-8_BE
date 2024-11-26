@@ -15,6 +15,10 @@ public class Rating {
 
     @Column
     private Float star;
+
+    @Column(columnDefinition = "nvarchar(MAX)")
+    private String content;
+
     @Column(columnDefinition = "date")
     private Date date_rate;
 

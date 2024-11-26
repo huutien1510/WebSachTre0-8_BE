@@ -13,6 +13,8 @@ public class ChapterContent {
     private Integer id;
     @Column(columnDefinition = "nvarchar(100)")
     private String link;
+    @Column
+    private Integer content_number;
 
     @ManyToOne
     @JoinColumn(name = "fk_chapter")

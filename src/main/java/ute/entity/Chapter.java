@@ -20,6 +20,8 @@ public class Chapter {
     private Date date;
     @Column
     private Integer viewCount;
+    @Column
+    private Integer chapterNumber;
 
     @ManyToMany(mappedBy = "chapters")
     private List<Account> accounts;
