@@ -20,7 +20,7 @@ public class Rating {
     private String content;
 
     @Column(columnDefinition = "date")
-    private Date date_rate;
+    private Date postDate;
 
     @ManyToOne
     @JoinColumn(name = "fk_book")

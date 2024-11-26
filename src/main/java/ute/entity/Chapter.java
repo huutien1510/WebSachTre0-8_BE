@@ -17,7 +17,7 @@ public class Chapter {
     @Column(columnDefinition = "nvarchar(100)")
     private String title;
     @Column(columnDefinition = "date")
-    private Date date;
+    private Date pushlishDate;
     @Column
     private Integer viewCount;
     @Column

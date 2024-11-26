@@ -12,9 +12,9 @@ public class ChapterContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(columnDefinition = "nvarchar(100)")
-    private String link;
+    private String content;
     @Column
-    private Integer content_number;
+    private Integer contentNumber;
 
     @ManyToOne
     @JoinColumn(name = "fk_chapter")

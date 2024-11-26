@@ -19,7 +19,7 @@ public class CheckinHistory {
     private Account account;
 
     @Column
-    private Integer bonus_point;
+    private Integer bonusPoint;
     @Column(columnDefinition = "date")
-    private LocalDateTime date;
+    private Date checkinDate;
 }

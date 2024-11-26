@@ -20,7 +20,7 @@ public class Notification {
     @Column(columnDefinition = "nvarchar(MAX)")
     private String content;
     @Column(columnDefinition = "date")
-    private LocalDateTime date;
+    private Date date;
 
     @ManyToMany(mappedBy = "notifications")
     private List<Account> accounts;

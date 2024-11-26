@@ -17,7 +17,7 @@ public class Comment {
     @Column(columnDefinition = "nvarchar(MAX)")
     private String content;
     @Column(columnDefinition = "date")
-    private LocalDateTime post_date;
+    private Date postDate;
 
     @ManyToOne
     @JoinColumn(name = "fk_chapter")

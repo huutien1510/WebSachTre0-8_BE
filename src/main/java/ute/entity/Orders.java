@@ -15,13 +15,13 @@ public class Orders {
     private Integer id;
 
     @Column
-    private Float total_price;
+    private Float totalPrice;
     @Column(columnDefinition = "nvarchar(200)")
     private String address;
     @Column(columnDefinition = "date")
     private LocalDateTime date;
     @Column(columnDefinition = "nvarchar(20)")
-    private String payment_method;
+    private String paymentMethod;
     @Column(columnDefinition = "nvarchar(20)")
     private String status;
 
