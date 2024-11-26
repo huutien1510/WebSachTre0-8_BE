@@ -19,11 +19,11 @@ public class Contest {
     @Column(columnDefinition = "nvarchar(MAX)")
     private String description;
     @Column(columnDefinition = "date")
-    private LocalDateTime start_date;
+    private Date start_date;
     @Column(columnDefinition = "date")
-    private LocalDateTime end_date;
+    private Date end_date;
     @Column
-    private Integer contestant_count;
+    private Integer contestantCount;
     @OneToMany(mappedBy = "contest",cascade = CascadeType.ALL)
     private List<Contestant> contestants;
 }

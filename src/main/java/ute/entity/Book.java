@@ -34,7 +34,7 @@ public class Book {
     @Column
     private Integer price;
     @Column(columnDefinition = "nvarchar(100)")
-    private String keysearch;
+    private String keySearch;
     @Column
     private Boolean is_delete;
 
