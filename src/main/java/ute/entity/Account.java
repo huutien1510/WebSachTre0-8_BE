@@ -1,13 +1,19 @@
 package ute.entity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +61,14 @@ public class Account {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
+            name = "favorites_book",
+            joinColumns = @JoinColumn(name = "fk_account"),
+            inverseJoinColumns = @JoinColumn(name = "fk_book")
+    )
+    private List<Book> books;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
             name = "account_notification",
             joinColumns = @JoinColumn(name = "fk_account"),
             inverseJoinColumns = @JoinColumn(name = "fk_notification")
@@ -68,5 +82,7 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "fk_chapter")
     )
     private List<Chapter> chapters;
+
+
 
 }
