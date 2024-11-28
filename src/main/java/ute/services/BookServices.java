@@ -35,8 +35,7 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice(),
-                        book.getRatings()
+                        book.getPrice()
                 ));
     }
 
@@ -52,8 +51,7 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice(),
-                        book.getRatings()
+                        book.getPrice()
                 ));
     }
 
@@ -68,8 +66,7 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice(),
-                        book.getRatings()
+                        book.getPrice()
                 ));
     }
 
@@ -84,8 +81,7 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice(),
-                        book.getRatings()
+                        book.getPrice()
                 ));
     }
 
@@ -100,8 +96,7 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice(),
-                        book.getRatings()
+                        book.getPrice()
                 ));
     }
 

@@ -1,6 +1,7 @@
 package ute.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,10 +28,14 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "fk_chapter")
+    @ToString.Exclude
+    @JsonManagedReference
     private Chapter chapter;
 
     @ManyToOne
     @JoinColumn(name="fk_account")
+    @ToString.Exclude
+    @JsonManagedReference
     private Account account;
 
 }

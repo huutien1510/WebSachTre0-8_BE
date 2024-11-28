@@ -22,5 +22,4 @@ public class BookDetailResponse {
     private String type;
     private String thumbnail;
     private Integer price;
-    private List<Rating> ratings;
 }
