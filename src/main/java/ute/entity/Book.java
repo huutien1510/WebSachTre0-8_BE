@@ -1,9 +1,6 @@
 package ute.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -60,6 +57,7 @@ public class Book {
     private List<Cart> carts;
 
     @ManyToMany(mappedBy = "books")
+    @JsonIgnore
     private List<Account> accounts;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)

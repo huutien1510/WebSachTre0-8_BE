@@ -1,5 +1,7 @@
 package ute.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,6 +45,8 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Rating> ratings;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Comment> comments;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Orders> orders;
