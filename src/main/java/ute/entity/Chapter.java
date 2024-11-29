@@ -28,7 +28,7 @@ public class Chapter {
     @Column
     private Integer chapterNumber;
 
-    @ManyToMany(mappedBy = "chapters")
+    @ManyToMany(mappedBy = "chaptersReadingHistory")
     @JsonIgnore
     private List<Account> accounts;
 

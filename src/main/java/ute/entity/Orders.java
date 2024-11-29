@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class Orders {
     @Column(columnDefinition = "nvarchar(200)")
     private String address;
     @Column(columnDefinition = "date")
-    private LocalDateTime date;
+    private Date date;
     @Column(columnDefinition = "nvarchar(20)")
     private String paymentMethod;
     @Column(columnDefinition = "nvarchar(20)")

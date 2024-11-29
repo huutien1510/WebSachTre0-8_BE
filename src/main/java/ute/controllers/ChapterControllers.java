@@ -29,4 +29,11 @@ public class ChapterControllers {
         apiResponse.setData(chapterServices.getChapterByBook(bookID));
         return apiResponse;
     }
+
+    @PatchMapping("/upView/{chapterID}")
+    ApiResponse<Integer> upViewChapter(@PathVariable Integer chapterID){
+        ApiResponse<Integer> apiResponse = new ApiResponse<>();
+        apiResponse.setData(chapterServices.upViewChapter(chapterID));
+        return apiResponse;
+    }
 }

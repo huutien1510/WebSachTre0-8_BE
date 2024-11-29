@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface FavoriteBookRepository extends JpaRepository<Book,Integer> {
-    @Query("SELECT c.books FROM Account c WHERE c.id= :accountID")
+    @Query("SELECT c.favBooks FROM Account c WHERE c.id= :accountID")
     List<Book> getFavoriteBookByAccount(@Param("accountID") Integer accountID);
 }

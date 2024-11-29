@@ -69,7 +69,7 @@ public class Account {
             joinColumns = @JoinColumn(name = "fk_account"),
             inverseJoinColumns = @JoinColumn(name = "fk_book")
     )
-    private List<Book> books;
+    private List<Book> favBooks;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -81,11 +81,11 @@ public class Account {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "account_chapter",
+            name = "reading_history",
             joinColumns = @JoinColumn(name = "fk_account"),
             inverseJoinColumns = @JoinColumn(name = "fk_chapter")
     )
-    private List<Chapter> chapters;
+    private List<Chapter> chaptersReadingHistory;
 
 
 
