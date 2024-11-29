@@ -45,8 +45,10 @@ public class Book {
     @Column
     private Boolean is_delete;
 
-    @OneToOne(mappedBy = "book")
-    private OrderDetail orderDetail;
+    @OneToMany(mappedBy = "book")
+    @ToString.Exclude
+    @JsonBackReference
+    private List<OrderDetail> orderDetails;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -56,8 +58,7 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     private List<Cart> carts;
 
-    @ManyToMany(mappedBy = "books")
-    @JsonIgnore
+    @ManyToMany(mappedBy = "favBooks")
     private List<Account> accounts;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)

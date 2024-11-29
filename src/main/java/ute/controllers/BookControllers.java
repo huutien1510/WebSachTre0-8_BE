@@ -31,6 +31,13 @@ public class BookControllers {
         return apiResponse;
     }
 
+    @GetMapping("/{bookID}")
+    ApiResponse<BookDetailResponse> getBookByID(@PathVariable Integer bookID){
+        ApiResponse<BookDetailResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(bookServices.getBookByID(bookID));
+        return apiResponse;
+    }
+
     @GetMapping("/search")
     ApiResponse<Page<BookDetailResponse>> getBookBySearch(@RequestParam(required = false) String keyword,
                                                           @RequestParam(defaultValue = "0") Integer page,
@@ -62,6 +69,15 @@ public class BookControllers {
                                                          @RequestParam(defaultValue = "10") Integer size){
         ApiResponse<Page<BookDetailResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(bookServices.getBookByGenre(genreID,page,size));
+        return apiResponse;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(500);
+        apiResponse.setMessage(ex.toString());
+        apiResponse.setData("Fault data");
         return apiResponse;
     }
 }

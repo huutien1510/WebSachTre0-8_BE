@@ -10,11 +10,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ute.dto.response.BookDetailResponse;
+import ute.entity.Account;
 import ute.entity.Book;
 import ute.repository.BookRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +39,21 @@ public class BookServices {
                         book.getThumbnail(),
                         book.getPrice()
                 ));
+    }
+
+    public BookDetailResponse getBookByID(Integer bookID){
+        Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID).orElseThrow(() -> new RuntimeException("Account not found")));
+        Book book= optionalBook.get();
+        return new BookDetailResponse(
+                book.getId(),
+                book.getName(),
+                book.getAuthor(),
+                book.getDescription(),
+                book.getGenres(), // Trả về danh sách Genre
+                book.getType(),
+                book.getThumbnail(),
+                book.getPrice()
+        );
     }
 
     public Page<BookDetailResponse> getBookByKeyWord(String keyword,Integer page, Integer size){

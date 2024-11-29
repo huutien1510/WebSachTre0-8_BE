@@ -28,4 +28,8 @@ public class ChapterServices {
     public List<ChapterResponse> getChapterByBook(Integer bookID) {
         return chapterRepository.getChapterByBook(bookID);
     }
+
+    public Integer upViewChapter(Integer chapterID) {
+        return chapterRepository.upView(chapterID);
+    }
 }

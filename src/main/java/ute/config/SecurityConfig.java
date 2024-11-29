@@ -10,9 +10,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/","/login", "/books").permitAll() // Không yêu cầu xác thực
+                        .requestMatchers("/","/login", "/books", "/chapters").permitAll() // Không yêu cầu xác thực
                         .anyRequest().permitAll() // Các URL khác yêu cầu đăng nhập
                 )
                 .formLogin(form -> form
