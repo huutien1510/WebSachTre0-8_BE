@@ -1,33 +1,49 @@
 package ute.entity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
+@Builder
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(columnDefinition = "varchar(50)")
     private String email;
-    @Column(columnDefinition = "varchar(50)")
+    @Column(columnDefinition = "varchar(255)")
     private String password;
     @Column(columnDefinition = "nvarchar(50)")
-    private String name;
+    private String username;
+    @Column(columnDefinition = "nvarchar(50)")
+    private String name ;
     @Column(columnDefinition = "varchar(11)")
     private String phone;
+    @Column(columnDefinition = "nvarchar(50)")
+    private String sex;
+    @Column(columnDefinition = "date")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date birthday;
     @Column
-    private Boolean is_active;
+    private Boolean is_active ;
     @Column
-    private Boolean is_admin;
+    private Boolean is_admin  ;
+    @ElementCollection
+    private Set<String> roles;
     @Column
     private Integer bonusPoint;
-    @Column(columnDefinition = "varchar(50)")
-    private String avatar;
+    @Column(columnDefinition = "varchar(255)")
+    private String avatar ;
 
     @OneToOne(mappedBy = "account",cascade = CascadeType.ALL)
     private Cart carts;
