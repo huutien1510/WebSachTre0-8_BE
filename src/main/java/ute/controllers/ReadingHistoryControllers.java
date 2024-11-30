@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ute.dto.request.ApiResponse;
+import ute.dto.request.ReadingHistoryRequest;
 import ute.dto.response.ReadingHistoryResponse;
 import ute.entity.Account;
 import ute.services.ReadingHistoryServices;
@@ -29,11 +30,9 @@ public class ReadingHistoryControllers {
     }
 
     @PostMapping
-    public ApiResponse<Account> addReadingHistory(@RequestBody Map<String, Object> body) {
-        Integer accountID = (Integer) body.get("accountID");
-        Integer chapterID = (Integer) body.get("chapterID");
+    public ApiResponse<Account> addReadingHistory(@RequestBody ReadingHistoryRequest body) {
         ApiResponse<Account> apiResponse = new ApiResponse<>();
-        apiResponse.setData(readingHistoryServices.addReadingHistory(accountID,chapterID));
+        apiResponse.setData(readingHistoryServices.addReadingHistory(body));
         return apiResponse;
     }
 

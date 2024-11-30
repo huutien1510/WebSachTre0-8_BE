@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,15 @@ public class GenreControllers {
     ApiResponse<List<Genre>> getAll(){
         ApiResponse<List<Genre>> apiResponse = new ApiResponse<>();
         apiResponse.setData(genreServices.getAll());
+        return apiResponse;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(500);
+        apiResponse.setMessage(ex.toString());
+        apiResponse.setData("Fault data");
         return apiResponse;
     }
 

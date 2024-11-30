@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ute.dto.request.ReadingHistoryRequest;
 import ute.dto.response.ReadingHistoryResponse;
 import ute.entity.Account;
 import ute.entity.Chapter;
@@ -30,17 +31,18 @@ public class ReadingHistoryServices {
         return readingHistoryRepository.getReadingHistoryByAccount(accountID);
     }
 
-    public Account addReadingHistory(Integer accountID, Integer chapterID){
-        Optional<Account> optionalAccount = Optional.of(accountRepository.findById(accountID).orElseThrow(() -> new RuntimeException("Account not found")));
+    public Account addReadingHistory(ReadingHistoryRequest body){
+        Optional<Account> optionalAccount = Optional.of(accountRepository.findById(body.getAccountID())
+                .orElseThrow(() -> new RuntimeException("Account not found")));
         Account account = optionalAccount.get();
 
-        Optional<Chapter> optionalChapter = Optional.of(chapterRepository.findById(chapterID).orElseThrow(() -> new RuntimeException("Chapter not found")));
+        Optional<Chapter> optionalChapter = Optional.of(chapterRepository.findById(body.getChapterID())
+                .orElseThrow(() -> new RuntimeException("Chapter not found")));
         Chapter chapter = optionalChapter.get();
 
 
         boolean chapterFound = false;
         List<Chapter> updatedChapters = new ArrayList<>();
-
 
         for (Chapter chapter1 : account.getChaptersReadingHistory()) {
             // Kiểm tra nếu bookId trùng và chapterNumber nhỏ hơn thì thay chapter

@@ -30,10 +30,26 @@ public class ChapterControllers {
         return apiResponse;
     }
 
+    @GetMapping("/totalView")
+    ApiResponse<Long> getTotalView(){
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setData(chapterServices.getTotalView());
+        return apiResponse;
+    }
+
     @PatchMapping("/upView/{chapterID}")
     ApiResponse<Integer> upViewChapter(@PathVariable Integer chapterID){
         ApiResponse<Integer> apiResponse = new ApiResponse<>();
         apiResponse.setData(chapterServices.upViewChapter(chapterID));
+        return apiResponse;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(500);
+        apiResponse.setMessage(ex.toString());
+        apiResponse.setData("Fault data");
         return apiResponse;
     }
 }

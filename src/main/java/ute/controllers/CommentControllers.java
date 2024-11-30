@@ -4,16 +4,16 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ute.dto.request.ApiResponse;
+import ute.dto.request.CommentRequest;
 import ute.dto.response.CommentResponse;
 import ute.dto.response.RatingResponse;
+import ute.entity.Comment;
 import ute.services.CommentServices;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/comments")
@@ -27,6 +27,14 @@ public class CommentControllers {
     public ApiResponse<List<CommentResponse>> getCommentByChapter(@PathVariable int chapterID) {
         ApiResponse<List<CommentResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(commentServices.getCommentByChapter(chapterID));
+        return apiResponse;
+    }
+
+    @PostMapping("/post")
+    public ApiResponse<Comment> postComment(@RequestBody CommentRequest body){
+
+        ApiResponse<Comment> apiResponse = new ApiResponse<>();
+        apiResponse.setData(commentServices.postComment(body));
         return apiResponse;
     }
 }
