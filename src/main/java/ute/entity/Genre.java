@@ -1,13 +1,20 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Genre {
     @Id
@@ -19,5 +26,7 @@ public class Genre {
     private String description;
 
     @ManyToMany(mappedBy = "genres")
+    @ToString.Exclude
+    @JsonBackReference
     private List<Book> books;
 }

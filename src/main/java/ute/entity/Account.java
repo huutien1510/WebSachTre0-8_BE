@@ -1,8 +1,13 @@
 package ute.entity;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -11,10 +16,11 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@Entity
+@Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +59,8 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Rating> ratings;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Comment> comments;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Orders> orders;
@@ -71,6 +79,14 @@ public class Account {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
+            name = "favorites_book",
+            joinColumns = @JoinColumn(name = "fk_account"),
+            inverseJoinColumns = @JoinColumn(name = "fk_book")
+    )
+    private List<Book> favBooks;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
             name = "account_notification",
             joinColumns = @JoinColumn(name = "fk_account"),
             inverseJoinColumns = @JoinColumn(name = "fk_notification")
@@ -79,10 +95,12 @@ public class Account {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "account_chapter",
+            name = "reading_history",
             joinColumns = @JoinColumn(name = "fk_account"),
             inverseJoinColumns = @JoinColumn(name = "fk_chapter")
     )
-    private List<Chapter> chapters;
+    private List<Chapter> chaptersReadingHistory;
+
+
 
 }

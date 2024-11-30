@@ -1,13 +1,18 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,17 +24,19 @@ public class Book {
     @Column(columnDefinition = "nvarchar(MAX)")
     private String description;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "book_genre",
             joinColumns = @JoinColumn(name = "fk_book"),
             inverseJoinColumns = @JoinColumn(name = "fk_genre")
     )
+    @ToString.Exclude
+    @JsonManagedReference
     private List<Genre> genres;
 
     @Column(columnDefinition = "nvarchar(20)")
     private String type;
-    @Column(columnDefinition = "nvarchar(50)")
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String thumbnail;
     @Column
     private Integer price;
@@ -38,14 +45,21 @@ public class Book {
     @Column
     private Boolean is_delete;
 
-    @OneToOne(mappedBy = "book")
-    private OrderDetail orderDetail;
+    @OneToMany(mappedBy = "book")
+    @ToString.Exclude
+    @JsonBackReference
+    private List<OrderDetail> orderDetails;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Chapter> chapters;
 
     @ManyToMany(mappedBy = "books")
     private List<Cart> carts;
+
+    @ManyToMany(mappedBy = "favBooks")
+    private List<Account> accounts;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<Rating> ratings;

@@ -1,14 +1,19 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,16 +28,21 @@ public class Chapter {
     @Column
     private Integer chapterNumber;
 
-    @ManyToMany(mappedBy = "chapters")
+    @ManyToMany(mappedBy = "chaptersReadingHistory")
+    @JsonIgnore
     private List<Account> accounts;
 
     @ManyToOne
     @JoinColumn(name = "fk_book")
+    @ToString.Exclude
+    @JsonManagedReference
     private Book book;
 
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
     private List<ChapterContent> chapterContents;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Comment> comments;
 }
