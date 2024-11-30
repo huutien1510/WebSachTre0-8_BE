@@ -14,5 +14,5 @@ public interface ChapterContentRepository extends JpaRepository<ChapterContent,I
     @Query("SELECT NEW ute.dto.response.ChapterContentResponse (t.id, t.content, t.contentNumber, t.chapter.id) " +
             "FROM ChapterContent t " +
             "WHERE t.chapter.id = :chapterID")
-    List<ChapterContentResponse> getNoidungchapterByChapter(@Param("chapterID") Integer chapterID);
+    List<ChapterContentResponse> getContentByChapter(@Param("chapterID") Integer chapterID);
 }

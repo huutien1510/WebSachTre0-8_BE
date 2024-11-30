@@ -5,15 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ute.dto.request.ApiResponse;
+import ute.dto.response.ApiResponse;
 import ute.dto.request.CommentRequest;
 import ute.dto.response.CommentResponse;
-import ute.dto.response.RatingResponse;
 import ute.entity.Comment;
 import ute.services.CommentServices;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/comments")

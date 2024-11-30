@@ -20,9 +20,9 @@ public class UserCreationRequest {
     private String password;
     private String username;
     private String name;
-    private String sex;
     private String phone;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private String sex;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date birthday;
     private Boolean is_active = false;
     private Boolean is_admin = false;

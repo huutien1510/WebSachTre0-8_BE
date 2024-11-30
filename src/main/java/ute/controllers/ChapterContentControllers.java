@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ute.dto.request.ApiResponse;
+import ute.dto.response.ApiResponse;
 import ute.dto.response.ChapterContentResponse;
 import ute.services.ChapterContentService;
 
@@ -21,15 +21,7 @@ public class ChapterContentControllers {
 
     @GetMapping("/{chapterID}")
     public List<ChapterContentResponse> getContentByChapter(@PathVariable int chapterID) {
-        return chapterContentService.getNoidungchapterByChapter(chapterID);
+        return chapterContentService.getContentByChapter(chapterID);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(500);
-        apiResponse.setMessage(ex.toString());
-        apiResponse.setData("Fault data");
-        return apiResponse;
-    }
 }

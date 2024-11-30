@@ -1,4 +1,4 @@
-package ute.dto.request;
+package ute.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

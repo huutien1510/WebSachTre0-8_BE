@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ute.dto.request.ApiResponse;
+import ute.dto.response.ApiResponse;
 import ute.dto.response.BookDetailResponse;
-import ute.dto.response.CommentResponse;
 import ute.entity.Account;
 import ute.services.FavoriteBookServices;
 

@@ -14,7 +14,7 @@ public enum ErrorCode {
     UNCAUGHT_EXCEPTION(500, HttpStatus.INTERNAL_SERVER_ERROR ,"Lỗi không xác định"),
     PASSWORD_INVALID(400,HttpStatus.BAD_REQUEST, "Mật khẩu chứa ít nhất 8 ký tự"),
     INVALID_KEY(400,HttpStatus.BAD_REQUEST, "Lỗi sai ErrorCode"),
-    AUTHENTICATION_FAILED(401,HttpStatus.UNAUTHORIZED, "Bạn chưa đăng nhập"),
+    AUTHENTICATION_FAILED(401,HttpStatus.UNAUTHORIZED, "Login Failed hehe"),
     ACCESS_DENIED(403,HttpStatus.FORBIDDEN, "Không có quyền truy cập"),
     INVALID_REFRESH_TOKEN(401,HttpStatus.UNAUTHORIZED, "Refresh Token không hợp lệ"),
     INVALID_VERIFICATION_TOKEN(400,HttpStatus.BAD_REQUEST, "Token xác thực không hợp lệ"),

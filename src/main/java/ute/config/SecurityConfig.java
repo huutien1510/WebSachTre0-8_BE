@@ -43,7 +43,16 @@ public class SecurityConfig {
             "/api/auth/register",
             "/api/auth/verify/**",
             "/api/auth/forgot-password",
-            "/api/auth/reset-password/**"
+            "/api/auth/reset-password/**",
+            "/books/**",
+            "/genres/**",
+            "/chapters/**",
+            "chaptercontents/**",
+            "/comments/**",
+            "/favbooks/**",
+            "/orders/**",
+            "/ratings/**",
+            "/readinghistory/**"
 
     };
     @Value("${signer.key}")
@@ -74,7 +83,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173")); // URL frontend
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "token", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

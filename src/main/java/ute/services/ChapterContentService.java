@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 public class ChapterContentService {
     ChapterContentRepository chapterContentRepository;
-    public List<ChapterContentResponse> getNoidungchapterByChapter(Integer chapterID){
-        return chapterContentRepository.getNoidungchapterByChapter(chapterID);
+    public List<ChapterContentResponse> getContentByChapter(Integer chapterID){
+        return chapterContentRepository.getContentByChapter(chapterID);
     }
 }

@@ -216,6 +216,7 @@ public class AuthService {
 
         // Thêm cookie vào header phản hồi
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
         return LoginResponse.builder()
                 .account(account)
                 .accessToken(token)

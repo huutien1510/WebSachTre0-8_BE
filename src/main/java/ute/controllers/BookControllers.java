@@ -6,15 +6,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import ute.dto.request.ApiResponse;
+import ute.dto.response.ApiResponse;
 import ute.dto.response.BookDetailResponse;
-import ute.entity.Book;
 import ute.services.BookServices;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
@@ -80,12 +74,4 @@ public class BookControllers {
         return apiResponse;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(500);
-        apiResponse.setMessage(ex.toString());
-        apiResponse.setData("Fault data");
-        return apiResponse;
-    }
 }
