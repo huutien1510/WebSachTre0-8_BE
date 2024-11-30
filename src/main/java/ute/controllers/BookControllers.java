@@ -13,6 +13,7 @@ import ute.services.BookServices;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class BookControllers {
     BookServices bookServices;
 
-    @GetMapping
+    @GetMapping("/getAll")
     ApiResponse<Page<BookDetailResponse>> getAllBooks(@RequestParam(defaultValue = "0") Integer page,
                                                       @RequestParam(defaultValue = "10") Integer size){
         ApiResponse<Page<BookDetailResponse>> apiResponse = new ApiResponse<>();
@@ -35,6 +36,13 @@ public class BookControllers {
     ApiResponse<BookDetailResponse> getBookByID(@PathVariable Integer bookID){
         ApiResponse<BookDetailResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(bookServices.getBookByID(bookID));
+        return apiResponse;
+    }
+
+    @GetMapping("/total")
+    ApiResponse<Long> getTotalBook(){
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
+        apiResponse.setData(bookServices.getTotal());
         return apiResponse;
     }
 

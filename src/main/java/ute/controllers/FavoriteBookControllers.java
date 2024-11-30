@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ute.dto.request.ApiResponse;
 import ute.dto.response.BookDetailResponse;
 import ute.dto.response.CommentResponse;
+import ute.entity.Account;
 import ute.services.FavoriteBookServices;
 
 import java.util.List;
@@ -28,9 +29,28 @@ public class FavoriteBookControllers {
     }
 
     @GetMapping("checkIsFavorites/{accountID}/{bookID}")
-    public ApiResponse<Boolean> checkIsFavoritesByAccount(@PathVariable Integer accountID, @PathVariable Integer bookID) {
+    public ApiResponse<Boolean> checkIsFavoritesByAccount(@PathVariable Integer accountID,
+                                                          @PathVariable Integer bookID) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         apiResponse.setData(favoriteBookServices.checkIsFavoritesByAccount(accountID,bookID));
+        return apiResponse;
+    }
+
+    @PostMapping("/addFavorite/{accountID}/{bookID}")
+    public ApiResponse<Account> addFavorite(@PathVariable Integer accountID,
+                                            @PathVariable Integer bookID)
+    {
+        ApiResponse<Account> apiResponse = new ApiResponse<>();
+        apiResponse.setData(favoriteBookServices.addFavorite(accountID,bookID));
+        return apiResponse;
+    }
+
+    @DeleteMapping("/removeFavorite/{accountID}/{bookID}")
+    public ApiResponse<Account> removeFavorite(@PathVariable Integer accountID,
+                                            @PathVariable Integer bookID)
+    {
+        ApiResponse<Account> apiResponse = new ApiResponse<>();
+        apiResponse.setData(favoriteBookServices.removeFavorite(accountID,bookID));
         return apiResponse;
     }
 

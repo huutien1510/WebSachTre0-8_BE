@@ -42,7 +42,8 @@ public class BookServices {
     }
 
     public BookDetailResponse getBookByID(Integer bookID){
-        Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID).orElseThrow(() -> new RuntimeException("Account not found")));
+        Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID)
+                .orElseThrow(() -> new RuntimeException("Book not found")));
         Book book= optionalBook.get();
         return new BookDetailResponse(
                 book.getId(),
@@ -54,6 +55,10 @@ public class BookServices {
                 book.getThumbnail(),
                 book.getPrice()
         );
+    }
+
+    public Long getTotal(){
+        return bookRepository.countBook();
     }
 
     public Page<BookDetailResponse> getBookByKeyWord(String keyword,Integer page, Integer size){

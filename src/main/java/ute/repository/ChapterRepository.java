@@ -23,6 +23,6 @@ public interface ChapterRepository extends JpaRepository<Chapter,Integer> {
     @Query("UPDATE Chapter c SET c.viewCount = c.viewCount + 1 WHERE c.id = :chapterID")
     Integer upView(@Param("chapterID") Integer chapterID);
 
-
-
+    @Query("SELECT sum(c.viewCount) FROM Chapter c")
+    Long getTotalView();
 }

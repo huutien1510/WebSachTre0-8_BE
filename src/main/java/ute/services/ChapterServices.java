@@ -32,4 +32,8 @@ public class ChapterServices {
     public Integer upViewChapter(Integer chapterID) {
         return chapterRepository.upView(chapterID);
     }
+
+    public Long getTotalView() {
+        return chapterRepository.getTotalView();
+    }
 }
