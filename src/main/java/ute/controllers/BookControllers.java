@@ -77,13 +77,28 @@ public class BookControllers {
         return apiResponse;
     }
 
-    @PatchMapping("updateBook/{bookID}")
+    @PostMapping("/addBook")
+    ApiResponse<Book> addBook(@RequestBody BookRequest body){
+        ApiResponse<Book> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(bookServices.addBook(body));
+        return apiResponse;
+    }
+
+    @PatchMapping("/updateBook/{bookID}")
     ApiResponse<Book> updateBook(@PathVariable Integer bookID,
                                  @RequestBody BookRequest body){
-        System.out.println(body);
         ApiResponse<Book> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         apiResponse.setData(bookServices.updateBook(bookID,body));
+        return apiResponse;
+    }
+
+    @DeleteMapping("/deleteBook/{bookID}")
+    ApiResponse<Book> deleteBook(@PathVariable Integer bookID){
+        ApiResponse<Book> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(bookServices.deleteBook(bookID));
         return apiResponse;
     }
 

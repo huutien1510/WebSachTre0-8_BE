@@ -22,8 +22,9 @@ public class Genre {
     @Column(columnDefinition = "nvarchar(MAX)")
     private String description;
 
-    @ManyToMany(mappedBy = "genres")
+    @ManyToMany(mappedBy = "genres",cascade ={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @ToString.Exclude
     @JsonBackReference
     private List<Book> books;
+
 }
