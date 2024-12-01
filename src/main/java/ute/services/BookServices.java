@@ -126,6 +126,29 @@ public class BookServices {
                 ));
     }
 
+    public Book addBook(BookRequest body){
+        Book book = new Book();
+        System.out.println(body);
+
+        //Update
+        book.setName(body.getName());
+        book.setAuthor(body.getAuthor());
+        book.setDescription(body.getDescription());
+        book.setGenres(
+                body.getGenreIDs().stream()
+                        .map(genre -> {
+                            Optional<Genre> optionalGenre = Optional.of(genreRepository.findById(genre)
+                                    .orElseThrow(() -> new RuntimeException("Genre not found")));
+                            return optionalGenre.get();
+                        })
+                        .collect(Collectors.toList()));
+        book.setThumbnail(book.getThumbnail());
+        book.setPrice(body.getPrice());
+        book.setIs_delete(false);
+
+        return bookRepository.save(book);
+    }
+
     public Book updateBook(Integer bookID, BookRequest body){
         Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID)
                 .orElseThrow(() -> new RuntimeException("Book not found")));
@@ -135,18 +158,26 @@ public class BookServices {
         book.setName(body.getName());
         book.setAuthor(body.getAuthor());
         book.setDescription(body.getDescription());
-        body.setGenres(
-                body.getGenres().stream()
+        book.setGenres(
+                body.getGenreIDs().stream()
                 .map(genre -> {
-            Optional<Genre> optionalGenre = Optional.of(genreRepository.findById(genre.getId())
+            Optional<Genre> optionalGenre = Optional.of(genreRepository.findById(genre)
                     .orElseThrow(() -> new RuntimeException("Genre not found")));
             return optionalGenre.get();
         })
                 .collect(Collectors.toList()));
-        book.setGenres(body.getGenres());
         book.setThumbnail(book.getThumbnail());
         book.setPrice(body.getPrice());
 
+        return bookRepository.save(book);
+    }
+
+    public Book deleteBook(Integer bookID){
+        Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID)
+                .orElseThrow(() -> new RuntimeException("Book not found")));
+        Book book = optionalBook.get();
+        //Xóa book_genre trước khi xóa book
+        book.setIs_delete(true);
         return bookRepository.save(book);
     }
 

@@ -24,7 +24,7 @@ import java.util.Set;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    public Integer id;
     @Column(columnDefinition = "varchar(50)")
     private String email;
     @Column(columnDefinition = "varchar(255)")

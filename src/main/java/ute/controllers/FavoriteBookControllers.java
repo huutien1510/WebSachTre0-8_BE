@@ -53,12 +53,4 @@ public class FavoriteBookControllers {
         return apiResponse;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(500);
-        apiResponse.setMessage(ex.toString());
-        apiResponse.setData("Fault data");
-        return apiResponse;
-    }
 }

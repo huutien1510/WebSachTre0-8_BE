@@ -24,7 +24,7 @@ public class Book {
     @Column(columnDefinition = "nvarchar(MAX)")
     private String description;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "book_genre",
             joinColumns = @JoinColumn(name = "fk_book"),
@@ -45,7 +45,7 @@ public class Book {
     @Column
     private Boolean is_delete;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonBackReference
     private List<OrderDetail> orderDetails;
