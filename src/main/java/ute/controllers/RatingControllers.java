@@ -38,6 +38,7 @@ public class RatingControllers {
     @PostMapping("/add")
     public ApiResponse<Rating> addRating(@RequestBody RatingRequest body){
         ApiResponse<Rating> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
         apiResponse.setData(ratingServices.addRating(body));
         return apiResponse;
     }
@@ -46,6 +47,7 @@ public class RatingControllers {
     public ApiResponse<Rating> updateRating(@PathVariable Integer ratingID,
                                             @RequestBody RatingRequest body){
         ApiResponse<Rating> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
         apiResponse.setData(ratingServices.updateRating(ratingID, body));
         return apiResponse;
     }
@@ -54,6 +56,7 @@ public class RatingControllers {
     public ApiResponse<String> deleteRating(@PathVariable Integer ratingID){
         ApiResponse<String> apiResponse = new ApiResponse<>();
         ratingServices.deleteRating(ratingID);
+        apiResponse.setCode(200);
         apiResponse.setData("Xóa thành công");
         return apiResponse;
     }
