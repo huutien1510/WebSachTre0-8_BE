@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ute.dto.request.AccountUpdateRequest;
-import ute.dto.request.UserCreationRequest;
-import ute.dto.response.SuccessResponse;
+import ute.dto.request.UpdateMyInfoRequest;
+import ute.dto.response.ApiResponse;
 import ute.entity.Account;
 import ute.services.AccountService;
 
@@ -15,26 +15,15 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping
-    public SuccessResponse<Account> createAccount(@RequestBody @Valid UserCreationRequest account) {
-        SuccessResponse<Account> response = new SuccessResponse<>();
-        response.setSuccess(true);
-        response.setStatus(200);
-        response.setMessage("Create account successfully");
-        response.setData(accountService.createRequest(account));
-        return response;
-    }
-
     @GetMapping
-    public SuccessResponse<List<Account>> getAllAccounts() {
-        return SuccessResponse.<List<Account>>builder()
-                .success(true)
-                .status(200)
+    public ApiResponse<List<Account>> getAllAccounts() {
+        return ApiResponse.<List<Account>>builder()
+                .code(200)
                 .message("Get all accounts successfully")
                 .data(accountService.getAllAccounts())
                 .build();
@@ -58,5 +47,14 @@ public class AccountController {
     @DeleteMapping("/account/{id}")
     public void deleteAccount(@PathVariable Integer id) {
         accountService.deleteAccount(id);
+    }
+
+    @PutMapping("/account/my-info")
+    public ApiResponse<Account> updateMyInfo(@Valid @RequestBody UpdateMyInfoRequest accountUpdateRequest) {
+        Account result =  accountService.updateMyInfo(accountUpdateRequest);
+        return ApiResponse.<Account>builder()
+                .code(200)
+                .data(result)
+                .build();
     }
 }

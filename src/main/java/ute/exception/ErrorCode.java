@@ -25,7 +25,8 @@ public enum ErrorCode {
     USER_NOT_ACTIVATED(400,HttpStatus.BAD_REQUEST, "Tài khoản chưa được kích hoạt"),
     EMAIL_NO_EXISTS(400,HttpStatus.BAD_REQUEST, "Tài khoản không tồn tại"),
     LOGIN_FAILED(400,HttpStatus.BAD_REQUEST, "Tài khoản hoặc mật khẩu không đúng!"),
-
+    RESET_PASSWORD_FAILED(400,HttpStatus.BAD_REQUEST, "Reset mật khẩu thất bại"),
+    USER_DELETED(400,HttpStatus.BAD_REQUEST, "Tài khoản đã bị khóa"),
     ;
 
     private int status;

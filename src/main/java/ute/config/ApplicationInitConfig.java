@@ -30,6 +30,7 @@ public class ApplicationInitConfig {
                         .name("admin")
                         .is_active(true)
                         .is_admin(true)
+                        .is_deleted(false)
                         .roles(role)
                         .build();
                 accountRepository.save(account);
