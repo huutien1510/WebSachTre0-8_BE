@@ -48,6 +48,8 @@ public class Account {
     private Set<String> roles;
     @Column
     private Integer bonusPoint;
+    @Column
+    private Boolean is_deleted;
     @Column(columnDefinition = "varchar(255)")
     private String avatar ;
 

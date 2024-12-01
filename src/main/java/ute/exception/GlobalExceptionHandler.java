@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import ute.dto.response.ExceptionResponse;
-import ute.dto.response.SuccessResponse;
+
 
 
 @ControllerAdvice

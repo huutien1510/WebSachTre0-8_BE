@@ -19,10 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ute.dto.request.*;
-import ute.dto.response.IntrospectResponse;
-import ute.dto.response.LoginResponse;
-import ute.dto.response.RefreshResponse;
-import ute.dto.response.ResponseDetail;
+import ute.dto.response.*;
 import ute.entity.Account;
 import ute.enums.Roles;
 import ute.exception.AppException;
@@ -66,7 +63,7 @@ public class AuthService {
     @Value("${bcrypt.salt.round}")
     int bcryptSaltRound;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    public ResponseDetail createAccount(UserCreationRequest request) {
+    public ApiResponse createAccount(UserCreationRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
         String username = request.getUsername();
@@ -98,28 +95,36 @@ public class AuthService {
                 }
 
                 String hashedPassword = passwordEncoder.encode(password);
-                Account account = accountMapper.toAccount(request);
-                account.setPassword(passwordEncoder.encode(request.getPassword()));
+                Account account = new Account();
+                account.setEmail(email);
+                account.setUsername(username);
+                account.setName(name);
+                account.setBirthday(birthday);
+                account.setSex(sex);
+                account.setPassword(hashedPassword);
                 HashSet<String> role = new HashSet<>();
                 role.add(Roles.USER.name());
                 account.setRoles(role);
                 account.setPhone(request.getPhone());
                 account.setIs_active(false);
                 account.setIs_admin(false);
+                account.setIs_deleted(false);
                 account.setBonusPoint(0);
                 account.setAvatar("https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg");
-                account.setName(request.getUsername());
                 Account savedUser =  accountRepository.save(account);
 
                 String hashedEmail = passwordEncoder.encode(savedUser.getEmail());
-                String verifyUrl = appUrl + "/api/auth/verify?email=" + savedUser.getEmail() + "&token=" + hashedEmail;
+                String verifyUrl = appUrl + "/auth/verify?email=" + savedUser.getEmail() + "&token=" + hashedEmail;
                 String emailTemplatePath = "src/main/resources/templates/email.html";
                 String emailTemplate = new String(Files.readAllBytes(Paths.get(emailTemplatePath)));
 
                 String emailContent = emailTemplate.replace("{{verifyUrl}}", verifyUrl);
                 emailUtil.sendMail(savedUser.getEmail(), "Chỉ còn một bước nữa để hoàn tất đăng ký của bạn!", emailContent);
 
-                return new ResponseDetail(201, "Tài khoản đăng ký thành công. Vui lòng xác nhận qua email.");
+                return ApiResponse.builder()
+                        .message("Tài khoản đăng ký thành công. Vui lòng xác nhận qua email.")
+                        .code(201)
+                        .build();
             } catch (IOException e) {
                 log.error("Error reading email template", e);
                 throw new AppException(ErrorCode.UNCAUGHT_EXCEPTION);
@@ -128,12 +133,10 @@ public class AuthService {
             throw new AppException(ErrorCode.MISSING_REQUIRED_FIELDS);
         }
     }
-    public ResponseDetail forgotPassword(ForgotRequest request) {
+    public String forgotPassword(ForgotRequest request) {
         try {
             String email = request.getEmail();
-            log.info("Email: ", email);
             Account user = accountRepository.findByEmail(email);
-            log.info("EMaillll:", user);
             if (user == null) {
                 throw new AppException(ErrorCode.EMAIL_NO_EXISTS);
             }
@@ -145,38 +148,38 @@ public class AuthService {
             String emailContent = emailTemplate.replace("{{resetUrl}}", resetUrl);
 
             emailUtil.sendMail(email, "Khôi phục mật khẩu", emailContent);
-            return new ResponseDetail(201, "Đã gửi yêu cầu khôi phục mật khẩu.");
+            return  "Đã gửi yêu cầu khôi phục mật khẩu.";
         } catch (IOException  e) {
-            return new ResponseDetail(500, "Internal Server Error");
+            return "Internal Server Error";
         }
     }
-    public ResponseDetail resetPassword(ResetPasswordRequest request) {
+    public String resetPassword(ResetPasswordRequest request) {
         try {
             String email = request.getEmail();
             String token = request.getToken();
             String newPassword = request.getNewPassword();
             if (email == null || token == null) {
-                return new ResponseDetail(400, "Email and token are required.");
+                throw new AppException(ErrorCode.RESET_PASSWORD_FAILED);
             }
 
             boolean isMatch = passwordEncoder.matches(email, token);
             if (!isMatch) {
-                return new ResponseDetail(400, "Invalid verification token.");
+                throw new AppException(ErrorCode.INVALID_VERIFICATION_TOKEN);
             }
 
             Account user = accountRepository.findByEmail(email);
             if (user == null) {
-                return new ResponseDetail(404, "Tài khoản không tồn tại.");
+                throw new AppException(ErrorCode.USER_NOT_FOUND);
             }
 
             String hashedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(hashedPassword);
             accountRepository.save(user);
 
-            return new ResponseDetail(200, "Tài khoản đã được khôi phục.");
+            return "Tài khoản đã được khôi phục.";
         } catch (Exception e) {
             log.error("Error resetting password", e);
-            return new ResponseDetail(500, "Internal Server Error");
+            return "Internal Server Error";
         }
     }
     public IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException {
@@ -203,6 +206,10 @@ public class AuthService {
 
         if (!authenticated) {
             throw new AppException(ErrorCode.LOGIN_FAILED);
+        }
+
+        if (account.getIs_deleted()) {
+            throw new AppException(ErrorCode.USER_DELETED);
         }
         var token = generateToken(account);
         var refreshToken = generateRefreshToken(account);

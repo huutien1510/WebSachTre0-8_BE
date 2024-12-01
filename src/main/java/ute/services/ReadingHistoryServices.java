@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ute.dto.request.ReadingHistoryRequest;
 import ute.dto.response.ReadingHistoryResponse;
@@ -27,10 +29,11 @@ public class ReadingHistoryServices {
     ReadingHistoryRepository readingHistoryRepository;
     ChapterRepository chapterRepository;
     AccountRepository accountRepository;
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public List<ReadingHistoryResponse> getReadingHistoryByAccount(Integer accountID){
         return readingHistoryRepository.getReadingHistoryByAccount(accountID);
     }
-
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Account addReadingHistory(ReadingHistoryRequest body){
         Optional<Account> optionalAccount = Optional.of(accountRepository.findById(body.getAccountID())
                 .orElseThrow(() -> new RuntimeException("Account not found")));

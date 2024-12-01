@@ -14,12 +14,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class AccountUpdateRequest {
+public class UpdateMyInfoRequest {
     String name;
     String sex;
     String phone;
     @JsonFormat(pattern = "dd/MM/yyyy")
     Date birthday;
-    Boolean is_active;
-    Boolean is_admin;
+    String avatar;
 }

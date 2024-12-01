@@ -35,15 +35,15 @@ public class SecurityConfig {
     }
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/user",
-            "/api/auth/login",
-            "/api/auth/introspect",
-            "/api/auth/logout",
-            "/api/auth/refresh",
-            "/api/auth/register",
-            "/api/auth/verify/**",
-            "/api/auth/forgot-password",
-            "/api/auth/reset-password/**",
+            "/user",
+            "/auth/login",
+            "/auth/introspect",
+            "/auth/logout",
+            "/auth/refresh",
+            "/auth/register",
+            "/auth/verify/**",
+            "/auth/forgot-password",
+            "/auth/reset-password/**",
             "/books/**",
             "/genres/**",
             "/chapters/**",
@@ -52,7 +52,7 @@ public class SecurityConfig {
             "/favbooks/**",
             "/orders/**",
             "/ratings/**",
-            "/readinghistory/**"
+
 
     };
     @Value("${signer.key}")
