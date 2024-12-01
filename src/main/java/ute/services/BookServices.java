@@ -9,10 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ute.dto.request.BookRequest;
 import ute.dto.response.BookDetailResponse;
 import ute.entity.Account;
 import ute.entity.Book;
+import ute.entity.Genre;
 import ute.repository.BookRepository;
+import ute.repository.GenreRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookServices {
     BookRepository bookRepository;
+    GenreRepository genreRepository;
 
     public Page<BookDetailResponse> getAllBook(Integer page, Integer size){
         Pageable pageable = PageRequest.of(page, size);
@@ -120,6 +124,30 @@ public class BookServices {
                         book.getThumbnail(),
                         book.getPrice()
                 ));
+    }
+
+    public Book updateBook(Integer bookID, BookRequest body){
+        Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID)
+                .orElseThrow(() -> new RuntimeException("Book not found")));
+        Book book = optionalBook.get();
+
+        //Update
+        book.setName(body.getName());
+        book.setAuthor(body.getAuthor());
+        book.setDescription(body.getDescription());
+        body.setGenres(
+                body.getGenres().stream()
+                .map(genre -> {
+            Optional<Genre> optionalGenre = Optional.of(genreRepository.findById(genre.getId())
+                    .orElseThrow(() -> new RuntimeException("Genre not found")));
+            return optionalGenre.get();
+        })
+                .collect(Collectors.toList()));
+        book.setGenres(body.getGenres());
+        book.setThumbnail(book.getThumbnail());
+        book.setPrice(body.getPrice());
+
+        return bookRepository.save(book);
     }
 
     public String normalizeKeyword(String keyword) {
