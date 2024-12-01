@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ute.dto.request.AccountUpdateRequest;
+import ute.dto.request.UpdateMyInfoRequest;
 import ute.dto.request.UserCreationRequest;
 import ute.entity.Account;
 import ute.enums.Roles;
@@ -29,25 +30,8 @@ public class AccountService {
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
 
-    public Account createRequest(UserCreationRequest request) {
-        // In giá trị của request
-
-
-        if (accountRepository.existsByUsername(request.getUsername())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-        Account account = accountMapper.toAccount(request);
-        account.setPassword(passwordEncoder.encode(request.getPassword()));
-        HashSet<String> role = new HashSet<>();
-        role.add(Roles.USER.name());
-        account.setRoles(role);
-        account.setName(request.getUsername());
-        return accountRepository.save(account);
-    }
-
     @PreAuthorize("hasRole('ADMIN')") // set quyền cho chuc nang getAllAccounts, xet quyen truoc khi thuc hien chuc nang
     public List<Account> getAllAccounts() {
-        log.info("Get all accounts");
         return accountRepository.findAll();
     }
     @PostAuthorize("returnObject.username == authentication.name or hasRole('ADMIN')") // set quyền cho chuc nang getAccountById, set quyen sau khi thuc hien chuc nang
@@ -63,8 +47,11 @@ public class AccountService {
         return account;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // set quyền cho chức năng updateAccount
     public Account updateAccount(Integer id, AccountUpdateRequest request) {
+        log.info("Authenticated user: {}", SecurityContextHolder.getContext().getAuthentication().getName());
+        log.info("Roles: {}", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account không tìm thấy."));
         accountMapper.updateAccount(account, request);
         account.setPhone(request.getPhone());
@@ -75,9 +62,24 @@ public class AccountService {
         }
         return accountRepository.save(account);
     }
+    @PostAuthorize("returnObject.username == authentication.name") // set quyền cho chức năng updateMyInfo,
+    public  Account updateMyInfo(UpdateMyInfoRequest request){
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        Account account = accountRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        account.setName(request.getName());
+        account.setSex(request.getSex());
+        account.setBirthday(request.getBirthday());
+        account.setAvatar(request.getAvatar());
+        account.setPhone(request.getPhone());
+        return accountRepository.save(account);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteAccount(Integer id) {
-        accountRepository.deleteById(id);
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        account.setIs_deleted(!account.getIs_deleted());
+        accountRepository.save(account);
     }
 }

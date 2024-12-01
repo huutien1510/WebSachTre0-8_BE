@@ -17,27 +17,27 @@ import java.text.ParseException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
     AuthService authService;
     @PostMapping("/login")
-    public SuccessResponse<LoginResponse> authenticate(@RequestBody LoginRequest request,  HttpServletResponse response) {
+    public ApiResponse<LoginResponse> authenticate(@RequestBody LoginRequest request,  HttpServletResponse response) {
         var result = authService.authenticate(request, response);
-        return SuccessResponse.<LoginResponse>builder()
+        return ApiResponse.<LoginResponse>builder()
                 .data(result)
                 .build();
     }
     @PostMapping("/introspect")
-    public SuccessResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+    public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authService.introspect(request);
-        return SuccessResponse.<IntrospectResponse>builder()
+        return ApiResponse.<IntrospectResponse>builder()
                 .data(result)
                 .build();
     }
     @PostMapping("/register")
-    public ResponseDetail createAccount(@RequestBody UserCreationRequest request, HttpServletResponse response) {
+    public ApiResponse createAccount(@RequestBody UserCreationRequest request, HttpServletResponse response) {
         return authService.createAccount(request);
     }
     @GetMapping("/verify")
@@ -45,14 +45,14 @@ public class AuthController {
         authService.verify(email, token, response);
     }
     @PostMapping("/logout")
-    public SuccessResponse<String> logout(HttpServletResponse response) {
+    public ApiResponse<String> logout(HttpServletResponse response) {
         authService.logout(response);
-        return SuccessResponse.<String>builder()
+        return ApiResponse.<String>builder()
                 .data("Logout successfully")
                 .build();
     }
     @PostMapping("/refresh")
-    public SuccessResponse<RefreshResponse> refresh(HttpServletRequest request, HttpServletResponse response) throws ParseException, JOSEException {
+    public ApiResponse<RefreshResponse> refresh(HttpServletRequest request, HttpServletResponse response) throws ParseException, JOSEException {
         // Lấy cookie từ request
         String refreshToken = null;
         if (request.getCookies() != null) {
@@ -72,19 +72,23 @@ public class AuthController {
         var result = authService.refreshToken(refreshToken, response);
 
         // Trả về response thành công
-        return SuccessResponse.<RefreshResponse>builder()
+        return ApiResponse.<RefreshResponse>builder()
                 .data(result)
                 .build();
     }
     @PostMapping("/forgot-password")
-    public ResponseEntity<ResponseDetail> forgotPassword(@RequestBody ForgotRequest request) {
-        ResponseDetail response = authService.forgotPassword(request);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+    public ApiResponse forgotPassword(@RequestBody ForgotRequest request) {
+        String response = authService.forgotPassword(request);
+        return ApiResponse.builder()
+                .message(response)
+                .build();
     }
     @PostMapping("/reset-password")
-    public ResponseEntity<ResponseDetail> resetPassword(@RequestBody ResetPasswordRequest request) {
-        ResponseDetail response = authService.resetPassword(request);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+    public ApiResponse resetPassword(@RequestBody ResetPasswordRequest request) {
+        String response = authService.resetPassword(request);
+        return ApiResponse.builder()
+                .message(response)
+                .build();
     }
 
 
