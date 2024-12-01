@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ute.dto.request.BookRequest;
 import ute.dto.response.ApiResponse;
 import ute.dto.response.BookDetailResponse;
+import ute.entity.Book;
 import ute.services.BookServices;
 
 @RestController
@@ -71,6 +74,16 @@ public class BookControllers {
                                                          @RequestParam(defaultValue = "10") Integer size){
         ApiResponse<Page<BookDetailResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(bookServices.getBookByGenre(genreID,page,size));
+        return apiResponse;
+    }
+
+    @PatchMapping("updateBook/{bookID}")
+    ApiResponse<Book> updateBook(@PathVariable Integer bookID,
+                                 @RequestBody BookRequest body){
+        System.out.println(body);
+        ApiResponse<Book> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(bookServices.updateBook(bookID,body));
         return apiResponse;
     }
 
