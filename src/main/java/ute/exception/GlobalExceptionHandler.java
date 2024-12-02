@@ -66,4 +66,14 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
+    @ExceptionHandler(value = UnsupportedOperationException.class)
+    public ResponseEntity<ExceptionResponse> handleUnsupportedOperationException(UnsupportedOperationException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ExceptionResponse.builder()
+                        .status(500)
+                        .message(e)
+                        .build()
+        );
+    }
 }

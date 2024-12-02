@@ -1,12 +1,11 @@
 package ute.services;
 
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ute.dto.request.OrderUpdaterRequest;
 import ute.dto.response.OrderDetailResponse;
 import ute.dto.response.OrderReponse;
 import ute.entity.Orders;
@@ -36,6 +35,7 @@ public class OrderServices {
                                 .map(orderDetail -> new OrderDetailResponse(
                                         orderDetail.getBook().getId(),
                                         orderDetail.getBook().getName(),
+                                        orderDetail.getBook().getType(),
                                         orderDetail.getBook().getThumbnail(),
                                         orderDetail.getQuantity()
                                 ))
@@ -61,6 +61,7 @@ public class OrderServices {
                                 .map(orderDetail -> new OrderDetailResponse(
                                         orderDetail.getBook().getId(),
                                         orderDetail.getBook().getName(),
+                                        orderDetail.getBook().getType(),
                                         orderDetail.getBook().getThumbnail(),
                                         orderDetail.getQuantity()
                                 ))
@@ -70,5 +71,21 @@ public class OrderServices {
                         order.getDiscount() != null ? order.getDiscount().getId() : null
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public Orders updateOrder(Integer orderID, OrderUpdaterRequest body){
+        Orders orders = orderRepository.findById(orderID)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        orders.setTotalPrice(body.getTotalPrice());
+        orders.setStatus(body.getStatus());
+        orders.setAddress(body.getAddress());
+        orders.setPaymentMethod(body.getPaymentMethod());
+
+        return orderRepository.save(orders);
+    }
+
+    public void deleteOrder(Integer orderID){
+        orderRepository.deleteById(orderID);
     }
 }

@@ -32,7 +32,7 @@ public class Orders {
     @Column(columnDefinition = "nvarchar(20)")
     private String status;
 
-    @OneToMany(mappedBy = "orders")
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
     @ManyToOne

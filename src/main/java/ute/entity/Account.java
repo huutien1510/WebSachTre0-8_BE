@@ -95,7 +95,7 @@ public class Account {
     )
     private List<Notification> notifications;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "reading_history",
             joinColumns = @JoinColumn(name = "fk_account"),
