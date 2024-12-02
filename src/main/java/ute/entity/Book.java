@@ -45,14 +45,14 @@ public class Book {
     @Column
     private Boolean is_delete;
 
-    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book")
     @ToString.Exclude
     @JsonBackReference
     private List<OrderDetail> orderDetails;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     @ToString.Exclude
-    @JsonBackReference
+    @JsonManagedReference
     private List<Chapter> chapters;
 
     @ManyToMany(mappedBy = "books")

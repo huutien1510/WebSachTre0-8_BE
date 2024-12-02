@@ -128,19 +128,15 @@ public class BookServices {
 
     public Book addBook(BookRequest body){
         Book book = new Book();
-        System.out.println(body);
 
-        //Update
+        //Set giá trị
         book.setName(body.getName());
         book.setAuthor(body.getAuthor());
         book.setDescription(body.getDescription());
         book.setGenres(
                 body.getGenreIDs().stream()
-                        .map(genre -> {
-                            Optional<Genre> optionalGenre = Optional.of(genreRepository.findById(genre)
-                                    .orElseThrow(() -> new RuntimeException("Genre not found")));
-                            return optionalGenre.get();
-                        })
+                        .map(genre -> genreRepository.findById(genre)
+                                    .orElseThrow(() -> new RuntimeException("Genre not found")))
                         .collect(Collectors.toList()));
         book.setThumbnail(book.getThumbnail());
         book.setPrice(body.getPrice());

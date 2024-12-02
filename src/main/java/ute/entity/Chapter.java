@@ -35,10 +35,12 @@ public class Chapter {
     @ManyToOne
     @JoinColumn(name = "fk_book")
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonBackReference
     private Book book;
 
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonManagedReference
     private List<ChapterContent> chapterContents;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)

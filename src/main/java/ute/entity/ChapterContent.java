@@ -1,5 +1,6 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -24,5 +25,7 @@ public class ChapterContent {
 
     @ManyToOne
     @JoinColumn(name = "fk_chapter")
+    @ToString.Exclude
+    @JsonBackReference
     private Chapter chapter;
 }
