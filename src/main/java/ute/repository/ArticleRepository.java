@@ -9,4 +9,5 @@ import ute.entity.Article;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article,Integer> {
     Page<Article> findAllByOrderByDateDesc(Pageable pageable);
+    boolean existsByTitle(String title);
 }
