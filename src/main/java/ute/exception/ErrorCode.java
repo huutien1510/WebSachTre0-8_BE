@@ -32,6 +32,8 @@ public enum ErrorCode {
     DISCOUNT_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Mã giảm giá không tồn tại"),
     SOFT_BOOK(400,HttpStatus.BAD_REQUEST, "Sách đã được mua"),
     PAYMENT_ERROR(400,HttpStatus.BAD_REQUEST, "Không thể tạo URL thanh toán MoMo."),
+    INVALID_REQUEST(400,HttpStatus.BAD_REQUEST, "Vui lòng nhập đầy đủ thông tin"),
+    ARTICLE_EXISTED(400,HttpStatus.BAD_REQUEST, "Bài viết đã tồn tại"),
     ;
 
     private int status;
