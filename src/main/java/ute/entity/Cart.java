@@ -21,6 +21,8 @@ public class Cart {
 
     @OneToOne
     @JoinColumn(name = "fk_account")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Account account;
 
     @ManyToMany

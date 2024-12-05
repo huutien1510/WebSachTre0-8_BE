@@ -53,7 +53,10 @@ public class AccountService {
         log.info("Roles: {}", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account không tìm thấy."));
-        accountMapper.updateAccount(account, request);
+        account.setName(request.getName());
+        account.setSex(request.getSex());
+        account.setBirthday(request.getBirthday());
+        account.setIs_active(request.getIs_active());
         account.setPhone(request.getPhone());
         if (request.getIs_admin()) {
             account.setRoles(new HashSet<>(List.of(Roles.ADMIN.name())));

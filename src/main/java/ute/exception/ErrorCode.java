@@ -27,6 +27,11 @@ public enum ErrorCode {
     LOGIN_FAILED(400,HttpStatus.BAD_REQUEST, "Tài khoản hoặc mật khẩu không đúng!"),
     RESET_PASSWORD_FAILED(400,HttpStatus.BAD_REQUEST, "Reset mật khẩu thất bại"),
     USER_DELETED(400,HttpStatus.BAD_REQUEST, "Tài khoản đã bị khóa"),
+    BOOK_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Sách không tồn tại"),
+    BOOK_ALREADY_IN_CART(400,HttpStatus.BAD_REQUEST, "Sách đã có trong giỏ hàng"),
+    DISCOUNT_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Mã giảm giá không tồn tại"),
+    SOFT_BOOK(400,HttpStatus.BAD_REQUEST, "Sách đã được mua"),
+    PAYMENT_ERROR(400,HttpStatus.BAD_REQUEST, "Không thể tạo URL thanh toán MoMo."),
     ;
 
     private int status;
