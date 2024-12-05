@@ -21,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import ute.dto.request.*;
 import ute.dto.response.*;
 import ute.entity.Account;
+import ute.entity.Cart;
 import ute.enums.Roles;
 import ute.exception.AppException;
 import ute.exception.ErrorCode;
@@ -110,6 +111,9 @@ public class AuthService {
                 account.setIs_admin(false);
                 account.setIs_deleted(false);
                 account.setBonusPoint(0);
+                Cart cart = new Cart();
+                cart.setAccount(account); // Liên kết với tài khoản
+                account.setCarts(cart);
                 account.setAvatar("https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg");
                 Account savedUser =  accountRepository.save(account);
 
@@ -293,7 +297,7 @@ public class AuthService {
     public void logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", "");
         cookie.setHttpOnly(true);
-        cookie.setSecure(true); // Chỉ dùng trong HTTPS
+        cookie.setSecure(false); // Chỉ dùng trong HTTPS
         cookie.setPath("/"); // Áp dụng cho toàn bộ domain
         cookie.setMaxAge(0); // Thời gian hết hạn
         response.addCookie(cookie);

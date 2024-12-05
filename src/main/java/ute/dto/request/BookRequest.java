@@ -14,7 +14,10 @@ public class BookRequest {
     private String name;
     private String author;
     private String description;
+    private String type;
     private List<Integer> genreIDs;
     private String thumbnail;
     private Integer price;
+    private Integer quantity = 0;
+
 }

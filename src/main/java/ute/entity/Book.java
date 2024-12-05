@@ -35,7 +35,7 @@ public class Book {
     private List<Genre> genres;
 
     @Column(columnDefinition = "nvarchar(20)")
-    private String type;
+    private String type = "Sach mem";
     @Column(columnDefinition = "nvarchar(MAX)")
     private String thumbnail;
     @Column
@@ -44,6 +44,8 @@ public class Book {
     private String keySearch;
     @Column
     private Boolean is_delete;
+    @Column
+    private Integer quantity = 0;
 
     @OneToMany(mappedBy = "book")
     @ToString.Exclude

@@ -41,7 +41,8 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice()
+                        book.getPrice(),
+                        book.getQuantity()
                 ));
     }
 
@@ -57,7 +58,8 @@ public class BookServices {
                 book.getGenres(), // Trả về danh sách Genre
                 book.getType(),
                 book.getThumbnail(),
-                book.getPrice()
+                book.getPrice(),
+                book.getQuantity()
         );
     }
 
@@ -77,7 +79,8 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice()
+                        book.getPrice(),
+                        book.getQuantity()
                 ));
     }
 
@@ -92,7 +95,8 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice()
+                        book.getPrice(),
+                        book.getQuantity()
                 ));
     }
 
@@ -107,7 +111,8 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice()
+                        book.getPrice(),
+                        book.getQuantity()
                 ));
     }
 
@@ -122,7 +127,8 @@ public class BookServices {
                         book.getGenres(), // Trả về danh sách Genre
                         book.getType(),
                         book.getThumbnail(),
-                        book.getPrice()
+                        book.getPrice(),
+                        book.getQuantity()
                 ));
     }
 
@@ -138,8 +144,10 @@ public class BookServices {
                         .map(genre -> genreRepository.findById(genre)
                                     .orElseThrow(() -> new RuntimeException("Genre not found")))
                         .collect(Collectors.toList()));
-        book.setThumbnail(book.getThumbnail());
+        book.setThumbnail(body.getThumbnail());
+        book.setType(body.getType());
         book.setPrice(body.getPrice());
+        book.setQuantity(body.getQuantity());
         book.setIs_delete(false);
 
         return bookRepository.save(book);
@@ -162,8 +170,10 @@ public class BookServices {
             return optionalGenre.get();
         })
                 .collect(Collectors.toList()));
-        book.setThumbnail(book.getThumbnail());
+        book.setThumbnail(body.getThumbnail());
+        book.setType(body.getType());
         book.setPrice(body.getPrice());
+        book.setQuantity(body.getQuantity());
 
         return bookRepository.save(book);
     }

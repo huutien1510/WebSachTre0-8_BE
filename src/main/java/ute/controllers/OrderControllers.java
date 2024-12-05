@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ute.dto.request.OrderRequest;
 import ute.dto.request.OrderUpdaterRequest;
 import ute.dto.response.ApiResponse;
+import ute.dto.response.LoginResponse;
 import ute.dto.response.OrderReponse;
+import ute.entity.OrderDetail;
 import ute.entity.Orders;
 import ute.services.OrderServices;
 
@@ -34,6 +37,21 @@ public class OrderControllers {
         ApiResponse<List<OrderReponse>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         apiResponse.setData(orderServices.getAllOrder());
+        return apiResponse;
+    }
+    @PostMapping
+    public ApiResponse<OrderReponse> createOrder(@RequestBody OrderRequest request){
+        ApiResponse<OrderReponse> apiResponse = new ApiResponse<>();
+        var result = orderServices.createOrder(request);
+        apiResponse.setData(result);
+        apiResponse.setMessage("Create order successfully");
+        return apiResponse;
+    }
+    @GetMapping("/checkSoftBookBought/{accountID}/{bookID}")
+    public ApiResponse<Boolean> checkSoftBookBought(@PathVariable Integer accountID,
+                                                    @PathVariable Integer bookID) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setData(orderServices.checkBuySoftBook(accountID,bookID));
         return apiResponse;
     }
 

@@ -49,7 +49,10 @@ public class Account {
     @Column(columnDefinition = "varchar(255)")
     private String avatar ;
 
-    @OneToOne(mappedBy = "account",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Cart carts;
 
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)

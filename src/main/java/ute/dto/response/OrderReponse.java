@@ -30,4 +30,5 @@ public class OrderReponse {
     private Integer accountID;
     private String accountName;
     private Integer discountID;
+    private String momoPayUrl;
 }

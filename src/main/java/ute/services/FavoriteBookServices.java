@@ -36,7 +36,8 @@ public class FavoriteBookServices {
                 book.getGenres(), // Trả về danh sách Genre
                 book.getType(),
                 book.getThumbnail(),
-                book.getPrice()
+                book.getPrice(),
+                book.getQuantity()
         )).collect(Collectors.toList());
     }
 
