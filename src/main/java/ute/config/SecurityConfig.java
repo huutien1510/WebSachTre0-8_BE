@@ -43,13 +43,15 @@ public class SecurityConfig {
             "/books/**",
             "/genres/**",
             "/chapters/**",
-            "chaptercontents/**",
+            "/chaptercontents/**",
             "/comments/**",
             "/favbooks/**",
             "/ratings/**",
             "/carts/**",
             "/orders/**",
-
+            "/contests/**",
+            "/contestants/**",
+            "/articles/**"
 
     };
     @Value("${signer.key}")

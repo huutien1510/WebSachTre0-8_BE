@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class OrderDetailResponse {
     private Integer bookID;
     private String bookName;
+    private String bookType;
     private String bookThumbnail;
     private Integer quantity;
 }

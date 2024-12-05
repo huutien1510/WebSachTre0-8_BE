@@ -66,6 +66,8 @@ public class Account {
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Orders> orders;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Contestant> contestants;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Suggestion> suggestions;
@@ -94,7 +96,7 @@ public class Account {
     )
     private List<Notification> notifications;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "reading_history",
             joinColumns = @JoinColumn(name = "fk_account"),

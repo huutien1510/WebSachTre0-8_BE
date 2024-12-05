@@ -1,6 +1,9 @@
 package ute.controllers;
 
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +17,10 @@ import ute.services.AccountService;
 import java.util.List;
 
 @RestController
-@Slf4j
 @RequestMapping("/user")
+@RequiredArgsConstructor
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountController {
     @Autowired
     private AccountService accountService;

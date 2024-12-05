@@ -36,13 +36,11 @@ public class RatingServices {
     }
 
     public Rating addRating(RatingRequest body){
-        Optional<Account> optionalAccount = Optional.of(accountRepository.findById(body.getAccountID())
-                .orElseThrow(() -> new RuntimeException("Account not found")));
-        Account account = optionalAccount.get();
+        Account account = accountRepository.findById(body.getAccountID())
+                .orElseThrow(()->new RuntimeException("Account not found"));
 
-        Optional<Book> optionalBook = Optional.of(bookRepository.findById(body.getBookID())
-                .orElseThrow(() -> new RuntimeException("Account not found")));
-        Book book = optionalBook.get();
+        Book book = bookRepository.findById(body.getBookID())
+                .orElseThrow(()->new RuntimeException("Book not found"));
 
         Rating rating = new Rating(null, body.getStar(), body.getContent(), body.getPostDate(), book, account);
 
@@ -51,9 +49,8 @@ public class RatingServices {
     }
 
     public Rating updateRating(Integer ratingID, RatingRequest body){
-        Optional<Rating> optionalRating = Optional.of(ratingRepository.findById(ratingID)
-                .orElseThrow(() -> new RuntimeException("Account not found")));
-        Rating rating = optionalRating.get();
+        Rating rating = ratingRepository.findById(ratingID)
+                .orElseThrow(()->new RuntimeException("Rating not found"));
 
         rating.setStar(body.getStar());
         rating.setContent(body.getContent());

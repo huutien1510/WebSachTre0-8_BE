@@ -1,8 +1,6 @@
 package ute.services;
 
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import ute.dto.request.OrderRequest;
+import ute.dto.request.OrderUpdaterRequest;
 import ute.dto.response.OrderDetailResponse;
 import ute.dto.response.OrderReponse;
 import ute.dto.response.PaymentResponse;
@@ -48,6 +47,7 @@ public class OrderServices {
                                 .map(orderDetail -> new OrderDetailResponse(
                                         orderDetail.getBook().getId(),
                                         orderDetail.getBook().getName(),
+                                        orderDetail.getBook().getType(),
                                         orderDetail.getBook().getThumbnail(),
                                         orderDetail.getQuantity()
                                 ))
@@ -75,6 +75,7 @@ public class OrderServices {
                                 .map(orderDetail -> new OrderDetailResponse(
                                         orderDetail.getBook().getId(),
                                         orderDetail.getBook().getName(),
+                                        orderDetail.getBook().getType(),
                                         orderDetail.getBook().getThumbnail(),
                                         orderDetail.getQuantity()
                                 ))
@@ -86,6 +87,7 @@ public class OrderServices {
                 ))
                 .collect(Collectors.toList());
     }
+
     @PostAuthorize("returnObject.accountName == authentication.name")
     public OrderReponse createOrder(OrderRequest orderRequest) {
         Account account = accountRepository.findById(orderRequest.getAccount())
@@ -205,5 +207,20 @@ public class OrderServices {
             }
         }
         return false;
+
+    public Orders updateOrder(Integer orderID, OrderUpdaterRequest body){
+        Orders orders = orderRepository.findById(orderID)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        orders.setTotalPrice(body.getTotalPrice());
+        orders.setStatus(body.getStatus());
+        orders.setAddress(body.getAddress());
+        orders.setPaymentMethod(body.getPaymentMethod());
+
+        return orderRepository.save(orders);
+    }
+
+    public void deleteOrder(Integer orderID){
+        orderRepository.deleteById(orderID);
     }
 }

@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ute.dto.request.OrderRequest;
+import ute.dto.request.OrderUpdaterRequest;
 import ute.dto.response.ApiResponse;
 import ute.dto.response.LoginResponse;
 import ute.dto.response.OrderReponse;
@@ -26,6 +27,7 @@ public class OrderControllers {
     @GetMapping("/account/{accountID}")
     ApiResponse<List<OrderReponse>> getOrderByAccount(@PathVariable Integer accountID){
         ApiResponse<List<OrderReponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
         apiResponse.setData(orderServices.getOrderByAccount(accountID));
         return apiResponse;
     }
@@ -33,6 +35,7 @@ public class OrderControllers {
     @GetMapping("/getAll")
     ApiResponse<List<OrderReponse>> getAllOrder(){
         ApiResponse<List<OrderReponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
         apiResponse.setData(orderServices.getAllOrder());
         return apiResponse;
     }
@@ -52,12 +55,24 @@ public class OrderControllers {
         return apiResponse;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ApiResponse<String> handleRuntimeException(RuntimeException ex) {
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(500);
-        apiResponse.setMessage(ex.toString());
-        apiResponse.setData("Fault data");
+    @PatchMapping("/updateOrder/{orderID}")
+    ApiResponse<Orders> updateOrder(@PathVariable Integer orderID,
+                                    @RequestBody OrderUpdaterRequest body)
+    {
+        ApiResponse<Orders> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(orderServices.updateOrder(orderID,body));
         return apiResponse;
     }
+
+    @DeleteMapping("/deleteOrder/{orderID}")
+    ApiResponse<String> deleteOrder(@PathVariable Integer orderID)
+    {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        orderServices.deleteOrder(orderID);
+        apiResponse.setCode(200);
+        apiResponse.setData("Xóa thành công");
+        return apiResponse;
+    }
+
 }
