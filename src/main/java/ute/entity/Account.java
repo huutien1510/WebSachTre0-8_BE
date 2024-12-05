@@ -1,10 +1,6 @@
 package ute.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -67,6 +63,8 @@ public class Account {
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Orders> orders;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Contestant> contestants;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<Suggestion> suggestions;

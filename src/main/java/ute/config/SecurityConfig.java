@@ -47,11 +47,14 @@ public class SecurityConfig {
             "/books/**",
             "/genres/**",
             "/chapters/**",
-            "chaptercontents/**",
+            "/chaptercontents/**",
             "/comments/**",
             "/favbooks/**",
             "/orders/**",
             "/ratings/**",
+            "/contests/**",
+            "/contestants/**",
+            "/articles/**"
 
 
     };

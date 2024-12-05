@@ -1,6 +1,7 @@
 package ute.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,14 +24,23 @@ public class Contestant {
 
     @ManyToOne
     @JoinColumn(name = "fk_contest")
+    @ToString.Exclude
+    @JsonManagedReference
     private Contest contest;
 
     @ManyToOne
     @JoinColumn(name = "fk_account")
+    @ToString.Exclude
+    @JsonManagedReference
     private Account account;
 
+
     @Column(columnDefinition = "nvarchar(100)")
+    private String submissionName;
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String submission;
     @Column(columnDefinition = "date")
-    private LocalDateTime submit_time;
+    private Date submit_time;
+    @Column
+    private Integer score;
 }
