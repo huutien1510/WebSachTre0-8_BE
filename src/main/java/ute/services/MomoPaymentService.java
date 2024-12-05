@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ute.config.MomoConfig;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,21 +23,22 @@ public class MomoPaymentService {
         long currentTime = System.currentTimeMillis();
         String requestId = orderID + "_" + currentTime;
         String orderId = orderID + "_" + currentTime;
+        Integer amount1 = (int) amount;
 
         // Xây dựng rawSignature
         String rawSignature = "accessKey=" + MomoConfig.ACCESS_KEY +
-                "&amount=" + amount +
+                "&amount=" + amount1 +
                 "&extraData=" +
-                "&ipnUrl=" + URLEncoder.encode(MomoConfig.IPN_URL, StandardCharsets.UTF_8) +
+                "&ipnUrl=" + MomoConfig.IPN_URL +
                 "&orderId=" + orderId +
                 "&orderInfo=" + orderInfo +
                 "&partnerCode=" + MomoConfig.PARTNER_CODE +
-                "&redirectUrl=" + URLEncoder.encode(MomoConfig.REDIRECT_URL, StandardCharsets.UTF_8) +
+                "&redirectUrl=" + MomoConfig.REDIRECT_URL+
                 "&requestId=" + requestId +
                 "&requestType=" + MomoConfig.REQUEST_TYPE;
 
         // Ký rawSignature bằng HMAC SHA256
-        String signature = hmacSHA256(rawSignature, MomoConfig.SECRET_KEY);
+        String signature = createSignature(MomoConfig.SECRET_KEY,rawSignature);
 
         // Xây dựng requestBody
         Map<String, Object> requestBody = new HashMap<>();
@@ -42,7 +46,7 @@ public class MomoPaymentService {
         requestBody.put("partnerName", "Test");
         requestBody.put("storeId", "MomoTestStore");
         requestBody.put("requestId", requestId);
-        requestBody.put("amount", amount);
+        requestBody.put("amount", amount1);
         requestBody.put("orderId", orderId);
         requestBody.put("orderInfo", orderInfo);
         requestBody.put("redirectUrl", MomoConfig.REDIRECT_URL);
@@ -66,6 +70,7 @@ public class MomoPaymentService {
             );
             // Parse JSON response để lấy payUrl
             Map<String, Object> responseMap = objectMapper.readValue(response, Map.class);
+            System.out.println(responseMap);
             return (String) responseMap.get("payUrl");
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,17 +78,30 @@ public class MomoPaymentService {
         }
     }
 
-    private String hmacSHA256(String data, String key) throws Exception {
-        Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-        mac.init(secretKeySpec);
-        byte[] hash = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        StringBuilder hashHex = new StringBuilder();
-        for (byte b : hash) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) hashHex.append('0');
-            hashHex.append(hex);
+    public String createSignature(String secretKey, String rawSignature) {
+        try {
+            // Tạo key từ secretKey
+            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+
+            // Khởi tạo HMAC với thuật toán SHA-256
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(secretKeySpec);
+
+            // Cập nhật dữ liệu (rawSignature) và tính toán chữ ký
+            byte[] hash = mac.doFinal(rawSignature.getBytes());
+
+            // Chuyển hash sang dạng Hex hoặc Base64
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating HMAC SHA-256 signature", e);
         }
-        return hashHex.toString();
     }
 }
