@@ -22,7 +22,6 @@ public class UserCreationRequest {
     private String name;
     private String phone;
     private String sex;
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthday;
     private Boolean is_active = false;
     private Boolean is_admin = false;
