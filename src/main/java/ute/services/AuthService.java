@@ -115,6 +115,7 @@ public class AuthService {
                 cart.setAccount(account); // Liên kết với tài khoản
                 account.setCarts(cart);
                 account.setAvatar("https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg");
+
                 Account savedUser =  accountRepository.save(account);
 
                 String hashedEmail = passwordEncoder.encode(savedUser.getEmail());

@@ -186,6 +186,7 @@ public class OrderServices {
                         .map(orderDetail -> new OrderDetailResponse(
                                 orderDetail.getBook().getId(),
                                 orderDetail.getBook().getName(),
+                                orderDetail.getBook().getType(),
                                 orderDetail.getBook().getThumbnail(),
                                 orderDetail.getQuantity()
                         ))
@@ -207,6 +208,7 @@ public class OrderServices {
             }
         }
         return false;
+    }
 
     public Orders updateOrder(Integer orderID, OrderUpdaterRequest body){
         Orders orders = orderRepository.findById(orderID)
