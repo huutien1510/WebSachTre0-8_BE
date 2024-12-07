@@ -61,6 +61,9 @@ public class ContestantServices {
         Contest contest = contestRepository.findById(contestID)
                 .orElseThrow(()->new RuntimeException("Contest not found"));
 
+        contest.setCurrentParticipants(contest.getCurrentParticipants()+1);
+        contestRepository.save(contest);
+
         Contestant contestant = Contestant.builder()
                 .account(account)
                 .contest(contest)
