@@ -23,7 +23,7 @@ public class Comment {
 
     @Column(columnDefinition = "nvarchar(MAX)")
     private String content;
-    @Column(columnDefinition = "date")
+    @Column
     private Date postDate;
 
     @ManyToOne
