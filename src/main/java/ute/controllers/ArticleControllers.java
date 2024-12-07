@@ -27,12 +27,42 @@ public class ArticleControllers {
         apiResponse.setData(articleServices.getAllArticles(page,size));
         return apiResponse;
     }
-    @PostMapping
-    public ApiResponse<Void> addArticle(@RequestBody Article article){
-        ApiResponse<Void> apiResponse = new ApiResponse<>();
-        articleServices.addArticle(article);
+
+    @GetMapping("/{articleID}")
+    ApiResponse<Article> getArticlesByID(@PathVariable Integer articleID){
+        ApiResponse<Article> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
-        apiResponse.setMessage("Add article successfully");
+        apiResponse.setData(articleServices.getArticlesByID(articleID));
         return apiResponse;
     }
+
+    @PostMapping("/addArticle")
+    public ApiResponse<Article> addArticle(@RequestBody Article article){
+        ApiResponse<Article> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setMessage("Add article successfully");
+        apiResponse.setData(articleServices.addArticle(article));
+        return apiResponse;
+    }
+
+    @PatchMapping("/editArticle/{articleID}")
+    public ApiResponse<Article> editArticle(@PathVariable Integer articleID,
+                                            @RequestBody Article body){
+        ApiResponse<Article> apiResponse = new ApiResponse<>();
+        System.out.println(body.getDate());
+        apiResponse.setCode(200);
+        apiResponse.setMessage("Edit article successfully");
+        apiResponse.setData(articleServices.editArticle(articleID,body));
+        return apiResponse;
+    }
+
+    @DeleteMapping("/deleteArticle/{articleID}")
+    public ApiResponse<Void> deleteArticle(@PathVariable Integer articleID){
+        ApiResponse<Void> apiResponse = new ApiResponse<>();
+        articleServices.deleteArticle(articleID);
+        apiResponse.setCode(200);
+        apiResponse.setMessage("Delete article successfully");
+        return apiResponse;
+    }
+
 }

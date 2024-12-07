@@ -14,6 +14,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment,Integer> {
     @Query("SELECT new ute.dto.response.CommentResponse(c.id,c.content,c.postDate,c.chapter.id ,c.account.id,c.account.name,c.account.avatar) " +
             "FROM Comment c " +
-            "WHERE c.chapter.id= :chapterID")
+            "WHERE c.chapter.id= :chapterID " +
+            "ORDER BY c.postDate DESC")
     List<CommentResponse> getCommentByChapter(@Param("chapterID") Integer chapterID);
 }

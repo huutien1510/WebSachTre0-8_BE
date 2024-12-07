@@ -22,15 +22,14 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(columnDefinition = "nvarchar(100)")
+    @Column(columnDefinition = "nvarchar(MAX)")
     private String title;
     @Column(columnDefinition = "nvarchar(MAX)")
     private String content;
     @Column(columnDefinition = "nvarchar(100)")
     private String author;
-    @Column(columnDefinition = "date")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate date;
+    @Column
+    private Date date;
     @Column(columnDefinition = "nvarchar(255)")
     private String image;
 
