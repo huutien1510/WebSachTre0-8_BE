@@ -10,6 +10,7 @@ import ute.entity.Account;
 import ute.entity.Discount;
 import ute.entity.OrderDetail;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +21,8 @@ import java.util.List;
 public class OrderRequest {
     private Float totalPrice;
     private String address;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date date;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime date;
     private String paymentMethod;
     private Integer account;
 //    private Integer discount;

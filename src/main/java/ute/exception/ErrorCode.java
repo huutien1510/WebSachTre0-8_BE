@@ -34,6 +34,9 @@ public enum ErrorCode {
     PAYMENT_ERROR(400,HttpStatus.BAD_REQUEST, "Không thể tạo URL thanh toán MoMo."),
     INVALID_REQUEST(400,HttpStatus.BAD_REQUEST, "Vui lòng nhập đầy đủ thông tin"),
     ARTICLE_EXISTED(400,HttpStatus.BAD_REQUEST, "Bài viết đã tồn tại"),
+    ORDER_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Đơn hàng không tồn tại"),
+    PAYMENT_FAILED(400,HttpStatus.BAD_REQUEST, "Thanh toán thất bại"),
+    DISCOUNT_CODE_EXIST(400,HttpStatus.BAD_REQUEST, "Mã giảm giá đã tồn tại"),
     ;
 
     private int status;

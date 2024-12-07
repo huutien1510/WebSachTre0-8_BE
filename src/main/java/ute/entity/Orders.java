@@ -25,8 +25,8 @@ public class Orders {
     private Float totalPrice;
     @Column(columnDefinition = "nvarchar(200)")
     private String address;
-    @Column(columnDefinition = "date")
-    private Date date;
+    @Column(columnDefinition = "DATETIME")
+    private LocalDateTime date;
     @Column(columnDefinition = "nvarchar(20)")
     private String paymentMethod;
     @Column(columnDefinition = "nvarchar(20)")

@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -51,7 +54,7 @@ public class OrderServices {
                                         orderDetail.getBook().getThumbnail(),
                                         orderDetail.getQuantity()
                                 ))
-                                        .collect(Collectors.toList()),
+                                .collect(Collectors.toList()),
                         order.getAccount().getId(),
                         order.getAccount().getName(),
                         order.getDiscount() != null ? order.getDiscount().getId() : null,
@@ -60,32 +63,31 @@ public class OrderServices {
                 ))
                 .collect(Collectors.toList());
     }
-    public List<OrderReponse> getAllOrder(){
-        List<Orders> orders = orderRepository.getAllOrder();
-        return orders.stream()
-                .map(order -> new OrderReponse(
-                        order.getId(),
-                        order.getTotalPrice(),
-                        order.getAddress(),
-                        order.getDate(),
-                        order.getPaymentMethod(),
-                        order.getStatus(),
-                        order.getOrderDetails()
-                                .stream()
-                                .map(orderDetail -> new OrderDetailResponse(
-                                        orderDetail.getBook().getId(),
-                                        orderDetail.getBook().getName(),
-                                        orderDetail.getBook().getType(),
-                                        orderDetail.getBook().getThumbnail(),
-                                        orderDetail.getQuantity()
-                                ))
-                                .collect(Collectors.toList()),
-                        order.getAccount().getId(),
-                        order.getAccount().getName(),
-                        order.getDiscount() != null ? order.getDiscount().getId() : null,
-                        null
-                ))
-                .collect(Collectors.toList());
+    public Page<OrderReponse> getAllOrder(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Orders> orders = orderRepository.findAll(pageable);
+        return orders.map(order -> new OrderReponse(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getAddress(),
+                order.getDate(),
+                order.getPaymentMethod(),
+                order.getStatus(),
+                order.getOrderDetails()
+                        .stream()
+                        .map(orderDetail -> new OrderDetailResponse(
+                                orderDetail.getBook().getId(),
+                                orderDetail.getBook().getName(),
+                                orderDetail.getBook().getType(),
+                                orderDetail.getBook().getThumbnail(),
+                                orderDetail.getQuantity()
+                        ))
+                        .collect(Collectors.toList()),
+                order.getAccount().getId(),
+                order.getAccount().getName(),
+                order.getDiscount() != null ? order.getDiscount().getId() : null,
+                null
+        ));
     }
 
     @PostAuthorize("returnObject.accountName == authentication.name")
@@ -114,7 +116,7 @@ public class OrderServices {
                         paymentUrl = momoPaymentService.createPaymentUrl(
                                 existingOrder.getId().toString(),
                                 existingOrder.getTotalPrice(),
-                                "Thanh toán đơn hàng #" + existingOrder.getId()
+                                "Thanh toán đơn hàng " + existingOrder.getId()
                         );
                     } catch (Exception e) {
                         throw new AppException(ErrorCode.PAYMENT_ERROR);
@@ -174,6 +176,8 @@ public class OrderServices {
         return mapToOrderResponse(newOrder, momoPayUrl);
     }
 
+
+
     private OrderReponse mapToOrderResponse(Orders order, String momoPayUrl) {
         return new OrderReponse(
                 order.getId(),
@@ -197,12 +201,21 @@ public class OrderServices {
                 momoPayUrl
         );
     }
+    public Orders updateOrderState(Integer orderID, String state){
+        Orders order = orderRepository.findById(orderID)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        order.setStatus(state);
+        return orderRepository.save(order);
+    }
+    public Long totalPrice(){
+        return orderRepository.totalPrice();
+    }
 
-    public boolean checkBuySoftBook(Integer accountID, Integer bookID){
+    public boolean  checkBuySoftBook(Integer accountID, Integer bookID) {
         List<Orders> orders = orderRepository.getOrderByAccount(accountID);
-        for (Orders order : orders){
-            for (OrderDetail orderDetail : order.getOrderDetails()){
-                if (orderDetail.getBook().getType().equals("Sach mem") && orderDetail.getBook().getId().equals(bookID) && order.getStatus().equals("Đã thanh toán")){
+        for (Orders order : orders) {
+            for (OrderDetail orderDetail : order.getOrderDetails()) {
+                if (orderDetail.getBook().getType().equals("Sach mem") && orderDetail.getBook().getId().equals(bookID) && order.getStatus().equals("Đã thanh toán")) {
                     return true;
                 }
             }
@@ -210,6 +223,7 @@ public class OrderServices {
         return false;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Orders updateOrder(Integer orderID, OrderUpdaterRequest body){
         Orders orders = orderRepository.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("Order not found"));

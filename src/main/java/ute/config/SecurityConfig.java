@@ -51,7 +51,9 @@ public class SecurityConfig {
             "/orders/**",
             "/contests/**",
             "/contestants/**",
-            "/articles/**"
+            "/articles/**",
+            "/orders//momo-return",
+            "/discounts/**",
 
     };
     @Value("${signer.key}")
