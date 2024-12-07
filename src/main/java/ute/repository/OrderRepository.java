@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ute.entity.Orders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,5 +16,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     List<Orders> getOrderByAccount(@Param("accountID") Integer accountID);
 
     @Query("SELECT o FROM Orders o")
-    List<Orders> getAllOrder();
+    Page<Orders> findAll(Pageable pageable);
+    @Query("SELECT SUM(o.totalPrice) FROM Orders o")
+    Long totalPrice ();
 }

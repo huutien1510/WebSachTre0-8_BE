@@ -1,5 +1,6 @@
 package ute.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,7 +24,8 @@ public class OrderReponse {
     private Integer id;
     private Float totalPrice;
     private String address;
-    private Date date;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss") // Định dạng khớp với FE
+    private LocalDateTime date;
     private String paymentMethod;
     private String status;
     private List<OrderDetailResponse> orderDetails;
