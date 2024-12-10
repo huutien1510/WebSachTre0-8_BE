@@ -37,6 +37,10 @@ public enum ErrorCode {
     ORDER_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Đơn hàng không tồn tại"),
     PAYMENT_FAILED(400,HttpStatus.BAD_REQUEST, "Thanh toán thất bại"),
     DISCOUNT_CODE_EXIST(400,HttpStatus.BAD_REQUEST, "Mã giảm giá đã tồn tại"),
+    CODE_TOO_LONG(400,HttpStatus.BAD_REQUEST, "Mã giảm giá quá dài"),
+    DISCOUNT_INVALID(400,HttpStatus.BAD_REQUEST, "Mã giảm giá đã hết số lượng. Vui lòng thử mã khác."),
+    PAYMENT_METHOD_INVALID(400,HttpStatus.BAD_REQUEST, "Chỉ hỗ trợ thanh toán lại cho phương thức MoMo."),
+    ORDER_INVALID_STATUS(400,HttpStatus.BAD_REQUEST, "Chỉ có thể thanh toán lại cho đơn hàng ở trạng thái 'Chờ thanh toán'."),
     ;
 
     private int status;

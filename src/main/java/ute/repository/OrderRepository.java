@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query("SELECT o FROM Orders o WHERE o.account.id= :accountID")
-    List<Orders> getOrderByAccount(@Param("accountID") Integer accountID);
+    Page<Orders> getOrderByAccount(@Param("accountID") Integer accountID, Pageable pageable);
 
-    @Query("SELECT o FROM Orders o")
+    @Query("SELECT o FROM Orders o ORDER BY o.date DESC")
     Page<Orders> findAll(Pageable pageable);
     @Query("SELECT SUM(o.totalPrice) FROM Orders o")
     Long totalPrice ();
