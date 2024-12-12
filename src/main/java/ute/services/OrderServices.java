@@ -35,33 +35,32 @@ public class OrderServices {
     DiscountRepository discountRepository;
     BookRepository bookRepository;
     MomoPaymentService momoPaymentService;
-    public List<OrderReponse> getOrderByAccount(Integer accountID){
-        List<Orders> orders = orderRepository.getOrderByAccount(accountID);
-        return orders.stream()
-                .map(order -> new OrderReponse(
-                        order.getId(),
-                        order.getTotalPrice(),
-                        order.getAddress(),
-                        order.getDate(),
-                        order.getPaymentMethod(),
-                        order.getStatus(),
-                        order.getOrderDetails()
-                                .stream()
-                                .map(orderDetail -> new OrderDetailResponse(
-                                        orderDetail.getBook().getId(),
-                                        orderDetail.getBook().getName(),
-                                        orderDetail.getBook().getType(),
-                                        orderDetail.getBook().getThumbnail(),
-                                        orderDetail.getQuantity()
-                                ))
-                                .collect(Collectors.toList()),
-                        order.getAccount().getId(),
-                        order.getAccount().getName(),
-                        order.getDiscount() != null ? order.getDiscount().getId() : null,
-                        null
+    public Page<OrderReponse> getOrderByAccount(Integer accountID, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Orders> orders = orderRepository.getOrderByAccount(accountID, pageable);
 
-                ))
-                .collect(Collectors.toList());
+        return orders.map(order -> new OrderReponse(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getAddress(),
+                order.getDate(),
+                order.getPaymentMethod(),
+                order.getStatus(),
+                order.getOrderDetails()
+                        .stream()
+                        .map(orderDetail -> new OrderDetailResponse(
+                                orderDetail.getBook().getId(),
+                                orderDetail.getBook().getName(),
+                                orderDetail.getBook().getType(),
+                                orderDetail.getBook().getThumbnail(),
+                                orderDetail.getQuantity()
+                        ))
+                        .collect(Collectors.toList()),
+                order.getAccount().getId(),
+                order.getAccount().getName(),
+                order.getDiscount() != null ? order.getDiscount().getId() : null,
+                null
+        ));
     }
     public Page<OrderReponse> getAllOrder(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
@@ -95,35 +94,19 @@ public class OrderServices {
         Account account = accountRepository.findById(orderRequest.getAccount())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        // Kiểm tra nếu có đơn hàng "Chờ thanh toán" cho "Sách mềm"
-        for (OrderDetailResponse orderDetailResponse : orderRequest.getOrderDetails()) {
-            Book book = bookRepository.findById(orderDetailResponse.getBookID())
-                    .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_FOUND));
+        // Áp dụng mã giảm giá (nếu có)
+        Discount discount = null;
+        if (!orderRequest.getDiscountCode().equals("")) {
+            discount = discountRepository.findByCode(orderRequest.getDiscountCode())
+                    .orElseThrow(() -> new AppException(ErrorCode.DISCOUNT_NOT_FOUND));
 
-            if (book.getType().equals("Sach mem")) {
-                List<Orders> pendingOrders = orderRepository.getOrderByAccount(account.getId())
-                        .stream()
-                        .filter(order -> order.getStatus().equals("Chờ thanh toán"))
-                        .filter(order -> order.getOrderDetails()
-                                .stream()
-                                .anyMatch(orderDetail -> orderDetail.getBook().getId().equals(book.getId())))
-                        .collect(Collectors.toList());
-
-                if (!pendingOrders.isEmpty()) {
-                    Orders existingOrder = pendingOrders.get(0);
-                    String paymentUrl = null;
-                    try {
-                        paymentUrl = momoPaymentService.createPaymentUrl(
-                                existingOrder.getId().toString(),
-                                existingOrder.getTotalPrice(),
-                                "Thanh toán đơn hàng " + existingOrder.getId()
-                        );
-                    } catch (Exception e) {
-                        throw new AppException(ErrorCode.PAYMENT_ERROR);
-                    }
-                    return mapToOrderResponse(existingOrder, paymentUrl);
-                }
+            if (discount.getQuantity() <= 0) {
+                throw new AppException(ErrorCode.DISCOUNT_INVALID);
             }
+
+            // Giảm số lượng mã giảm giá ngay khi áp dụng
+            discount.setQuantity(discount.getQuantity() - 1);
+            discountRepository.save(discount);
         }
 
         // Tạo đơn hàng mới
@@ -133,6 +116,7 @@ public class OrderServices {
                 .date(orderRequest.getDate())
                 .paymentMethod(orderRequest.getPaymentMethod())
                 .account(account)
+                .discount(discount) // Gán mã giảm giá cho đơn hàng
                 .status("Chờ thanh toán")
                 .build();
 
@@ -176,6 +160,37 @@ public class OrderServices {
         return mapToOrderResponse(newOrder, momoPayUrl);
     }
 
+    // Thanh toán lại
+    public OrderReponse retryPayment(Integer orderId) {
+        // Tìm đơn hàng theo ID và kiểm tra trạng thái
+        Orders existingOrder = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (!existingOrder.getStatus().equalsIgnoreCase("Chờ thanh toán")) {
+            throw new AppException(ErrorCode.ORDER_INVALID_STATUS);
+        }
+
+        // Xử lý thanh toán MoMo
+        String momoPayUrl;
+        if (existingOrder.getPaymentMethod().equalsIgnoreCase("momo")) {
+            try {
+                momoPayUrl = momoPaymentService.createPaymentUrl(
+                        existingOrder.getId().toString(),
+                        existingOrder.getTotalPrice(),
+                        "Thanh toán lại đơn hàng #" + existingOrder.getId()
+                );
+            } catch (Exception e) {
+                throw new AppException(ErrorCode.PAYMENT_ERROR);
+            }
+        } else {
+            throw new AppException(ErrorCode.PAYMENT_METHOD_INVALID);
+        }
+
+        // Trả về thông tin đơn hàng với link thanh toán mới
+        return mapToOrderResponse(existingOrder, momoPayUrl);
+    }
+
+
 
 
     private OrderReponse mapToOrderResponse(Orders order, String momoPayUrl) {
@@ -212,7 +227,8 @@ public class OrderServices {
     }
 
     public boolean  checkBuySoftBook(Integer accountID, Integer bookID) {
-        List<Orders> orders = orderRepository.getOrderByAccount(accountID);
+        Pageable pageable = PageRequest.of(0, 100);
+        Page<Orders> orders = orderRepository.getOrderByAccount(accountID, pageable);
         for (Orders order : orders) {
             for (OrderDetail orderDetail : order.getOrderDetails()) {
                 if (orderDetail.getBook().getType().equals("Sach mem") && orderDetail.getBook().getId().equals(bookID) && order.getStatus().equals("Đã thanh toán")) {
@@ -234,6 +250,12 @@ public class OrderServices {
         orders.setPaymentMethod(body.getPaymentMethod());
 
         return orderRepository.save(orders);
+    }
+    public void updateCancel(Integer orderID){
+        Orders orders = orderRepository.findById(orderID)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        orders.setStatus("Đã hủy");
+        orderRepository.save(orders);
     }
 
     public void deleteOrder(Integer orderID){

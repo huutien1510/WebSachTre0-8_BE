@@ -29,10 +29,11 @@ public class OrderControllers {
     OrderServices orderServices;
 
     @GetMapping("/account/{accountID}")
-    ApiResponse<List<OrderReponse>> getOrderByAccount(@PathVariable Integer accountID){
-        ApiResponse<List<OrderReponse>> apiResponse = new ApiResponse<>();
+    ApiResponse<Page<OrderReponse>> getOrderByAccount(@PathVariable Integer accountID, @RequestParam(defaultValue = "0") Integer page,
+                                                      @RequestParam(defaultValue = "10") Integer size){
+        ApiResponse<Page<OrderReponse>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
-        apiResponse.setData(orderServices.getOrderByAccount(accountID));
+        apiResponse.setData(orderServices.getOrderByAccount(accountID, page, size));
         return apiResponse;
     }
 
@@ -76,6 +77,15 @@ public class OrderControllers {
         apiResponse.setData(orderServices.updateOrder(orderID,body));
         return apiResponse;
     }
+    @GetMapping("/cancelOrder/{orderID}")
+    ApiResponse cancelOrder(@PathVariable Integer orderID)
+    {
+        ApiResponse apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        orderServices.updateCancel(orderID);
+        apiResponse.setMessage("Hủy đơn hàng thành công");
+        return apiResponse;
+    }
       
     @GetMapping("/momo-return")
     public ApiResponse<Orders> handlePaymentReturn(@RequestParam String orderId, @RequestParam String resultCode) {
@@ -101,6 +111,14 @@ public class OrderControllers {
         orderServices.deleteOrder(orderID);
         apiResponse.setCode(200);
         apiResponse.setData("Xóa thành công");
+        return apiResponse;
+    }
+    @GetMapping("/retryOrder/{orderID}")
+    ApiResponse<OrderReponse> getOrderDetail(@PathVariable Integer orderID)
+    {
+        ApiResponse<OrderReponse> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(orderServices.retryPayment(orderID));
         return apiResponse;
     }
 

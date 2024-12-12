@@ -52,8 +52,12 @@ public class SecurityConfig {
             "/contests/**",
             "/contestants/**",
             "/articles/**",
-            "/orders//momo-return",
-            "/discounts/**",
+            "/orders/momo-return",
+            "/orders/retryOrder",
+            "/orders//cancelOrder/**",
+            "/discounts/useDiscount/**",
+            "/discounts/checkDiscount/**",
+
 
     };
     @Value("${signer.key}")
@@ -83,7 +87,8 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // URL frontend
+//        configuration.setAllowedOrigins(List.of("https://web-sach-tre0-8-fe.vercel.app")); // URL frontend
+        configuration.setAllowedOrigins(List.of("http://localhost:5173/")); // URL frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "token", "Content-Type"));
         configuration.setAllowCredentials(true);

@@ -25,6 +25,6 @@ public class OrderRequest {
     private LocalDateTime date;
     private String paymentMethod;
     private Integer account;
-//    private Integer discount;
+    private String discountCode;
     private List<OrderDetailResponse> orderDetails;
 }
