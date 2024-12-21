@@ -220,6 +220,13 @@ public class OrderServices {
         Orders order = orderRepository.findById(orderID)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         order.setStatus(state);
+        order.getOrderDetails().forEach(orderDetail -> {
+            Book book = orderDetail.getBook();
+            if (book.getType().equals("Sach cung")) {
+                book.setQuantity(book.getQuantity() - orderDetail.getQuantity());
+                bookRepository.save(book);
+            }
+        });
         return orderRepository.save(order);
     }
     public Long totalPrice(){
@@ -248,6 +255,13 @@ public class OrderServices {
         orders.setStatus(body.getStatus());
         orders.setAddress(body.getAddress());
         orders.setPaymentMethod(body.getPaymentMethod());
+        if (body.getStatus().equals("Đã giao hàng")){
+            orders.getOrderDetails().forEach(orderDetail -> {
+                Book book = orderDetail.getBook();
+                book.setQuantity(book.getQuantity() - orderDetail.getQuantity());
+                bookRepository.save(book);
+            });
+        }
 
         return orderRepository.save(orders);
     }

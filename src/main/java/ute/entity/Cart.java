@@ -1,6 +1,8 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +15,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,7 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "fk_account")
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private Account account;
 
     @ManyToMany
@@ -31,5 +33,7 @@ public class Cart {
             joinColumns = @JoinColumn(name = "fk_cart"),
             inverseJoinColumns = @JoinColumn(name = "fk_book")
     )
+    @ToString.Exclude
+    @JsonManagedReference
     private List<Book> books;
 }

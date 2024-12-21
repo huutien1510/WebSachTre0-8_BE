@@ -58,6 +58,8 @@ public class Book {
     private List<Chapter> chapters;
 
     @ManyToMany(mappedBy = "books")
+    @ToString.Exclude
+    @JsonBackReference
     private List<Cart> carts;
 
     @ManyToMany(mappedBy = "favBooks")
