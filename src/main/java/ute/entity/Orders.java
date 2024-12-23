@@ -1,6 +1,7 @@
 package ute.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,6 +41,7 @@ public class Orders {
     private Account account;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "fk_discount")
     private Discount discount;
 }

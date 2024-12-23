@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ute.dto.request.RequestDiscount;
 import ute.dto.request.UseDiscountRequest;
+import ute.dto.response.DiscountResponse;
 import ute.entity.Discount;
 import ute.entity.Orders;
 import ute.exception.AppException;
@@ -26,8 +27,17 @@ import java.util.List;
 public class DiscountService {
     DiscountRepository discountRepository;
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<Discount> getAllDiscount(Integer page, Integer size){
-       return discountRepository.findAll(PageRequest.of(page, size));
+    public Page<DiscountResponse> getAllDiscount(Integer page, Integer size){
+       Page<Discount> discounts =  discountRepository.findAll(PageRequest.of(page, size));
+         return discounts.map(discount -> new DiscountResponse(
+                discount.getId(),
+                discount.getCode(),
+                discount.getType(),
+                discount.getValue(),
+                discount.getStartDate(),
+                discount.getEndDate(),
+                discount.getQuantity()
+         ));
     }
     @PreAuthorize("hasRole('ADMIN')")
     public Discount saveOrUpdateDiscount(RequestDiscount requestDiscount) {

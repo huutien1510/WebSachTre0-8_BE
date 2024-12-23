@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ute.dto.request.RequestDiscount;
 import ute.dto.request.UseDiscountRequest;
 import ute.dto.response.ApiResponse;
+import ute.dto.response.DiscountResponse;
 import ute.entity.Discount;
 import ute.services.DiscountService;
 
@@ -20,9 +21,9 @@ import ute.services.DiscountService;
 public class DiscountController {
     DiscountService discountService;
     @GetMapping("/getAll")
-    ApiResponse<Page<Discount>> getAllDiscounts(@RequestParam(defaultValue = "0") Integer page,
-                                                                                @RequestParam(defaultValue = "10") Integer size){
-        ApiResponse<Page<Discount>> apiResponse = new ApiResponse<>();
+    ApiResponse<Page<DiscountResponse>> getAllDiscounts(@RequestParam(defaultValue = "0") Integer page,
+                                                        @RequestParam(defaultValue = "10") Integer size){
+        ApiResponse<Page<DiscountResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(discountService.getAllDiscount(page,size));
         return apiResponse;
     }
