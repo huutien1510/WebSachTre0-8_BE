@@ -58,11 +58,12 @@ public class Book {
     private List<Chapter> chapters;
 
     @ManyToMany(mappedBy = "books")
-    @ToString.Exclude
-    @JsonBackReference
+    @JsonIgnore
     private List<Cart> carts;
 
     @ManyToMany(mappedBy = "favBooks")
+    @ToString.Exclude
+    @JsonBackReference
     private List<Account> accounts;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
