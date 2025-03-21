@@ -19,7 +19,7 @@ public class Genre {
     private Integer id;
     @Column(columnDefinition = "nvarchar(100)")
     private String name;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToMany(mappedBy = "genres",cascade ={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

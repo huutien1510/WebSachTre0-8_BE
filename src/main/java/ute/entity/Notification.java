@@ -23,7 +23,7 @@ public class Notification {
     private Integer id;
     @Column(columnDefinition = "nvarchar(100)")
     private String title;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String content;
     @Column(columnDefinition = "date")
     private Date date;

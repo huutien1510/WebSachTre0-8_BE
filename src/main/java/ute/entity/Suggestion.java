@@ -22,7 +22,7 @@ public class Suggestion {
     private String type;
     @Column(columnDefinition = "nvarchar(100)")
     private String title;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String content;
     @Column
     private Boolean seen;
