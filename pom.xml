@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -15,6 +15,7 @@
     <groupId>ute</groupId>
     <artifactId>WebSachTre0-8</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>WebSachTre0-8</name>
     <description>Spring Boot Project with MapStruct</description>
 
@@ -44,18 +45,13 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- Microsoft SQL Server JDBC -->
+        <!-- MySQL Connector -->
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version> <!-- Specify the version here -->
             <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
 
         <!-- Lombok -->
         <dependency>
@@ -109,6 +105,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <packaging>war</packaging>
+                </configuration>
+            </plugin>
 
             <!-- Maven Compiler Plugin with MapStruct Processor -->
             <plugin>
@@ -134,6 +137,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>

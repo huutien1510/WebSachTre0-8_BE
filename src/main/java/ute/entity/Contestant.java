@@ -37,7 +37,7 @@ public class Contestant {
 
     @Column(columnDefinition = "nvarchar(100)")
     private String submissionName;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String submission;
     @Column(columnDefinition = "date")
     private Date submit_time;

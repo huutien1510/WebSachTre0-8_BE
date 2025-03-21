@@ -22,9 +22,9 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "Text")
     private String title;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "Text")
     private String content;
     @Column(columnDefinition = "nvarchar(100)")
     private String author;

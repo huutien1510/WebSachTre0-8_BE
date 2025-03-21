@@ -18,7 +18,7 @@ public class ChapterContent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String content;
     @Column
     private Integer contentNumber;

@@ -1,6 +1,8 @@
 package ute.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +24,7 @@ public class Rating {
     @Column
     private Float star;
 
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(columnDefinition = "date")
@@ -34,6 +36,8 @@ public class Rating {
 
     @ManyToOne
     @JoinColumn(name = "fk_account")
+    @ToString.Exclude
+    @JsonIgnore
     private Account account;
 
 }

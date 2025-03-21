@@ -24,9 +24,9 @@ public class Contest {
     private Integer id;
     @Column(columnDefinition = "nvarchar(100)")
     private String name;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String banner;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Column(columnDefinition = "date")
     private Date start_date;

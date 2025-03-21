@@ -21,7 +21,7 @@ public class Book {
     private String name;
     @Column(columnDefinition = "nvarchar(50)")
     private String author;
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
@@ -36,7 +36,7 @@ public class Book {
 
     @Column(columnDefinition = "nvarchar(20)")
     private String type = "Sach mem";
-    @Column(columnDefinition = "nvarchar(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String thumbnail;
     @Column
     private Integer price;
@@ -58,11 +58,12 @@ public class Book {
     private List<Chapter> chapters;
 
     @ManyToMany(mappedBy = "books")
-    @ToString.Exclude
-    @JsonBackReference
+    @JsonIgnore
     private List<Cart> carts;
 
     @ManyToMany(mappedBy = "favBooks")
+    @ToString.Exclude
+    @JsonBackReference
     private List<Account> accounts;
 
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)

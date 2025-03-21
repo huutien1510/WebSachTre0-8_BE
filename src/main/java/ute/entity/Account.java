@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,14 +50,16 @@ public class Account {
     private String avatar ;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    @JsonManagedReference
     @ToString.Exclude
+    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     private Cart carts;
 
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     private List<CheckinHistory> checkinHistory;
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
     private List<Rating> ratings;
     @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
     @ToString.Exclude
