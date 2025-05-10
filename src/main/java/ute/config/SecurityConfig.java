@@ -58,7 +58,6 @@ public class SecurityConfig {
             "/discounts/useDiscount/**",
             "/discounts/checkDiscount/**",
 
-
     };
     @Value("${signer.key}")
     private String SIGNER_KEY;
@@ -69,12 +68,10 @@ public class SecurityConfig {
                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Cho phép tất cả các phương thức
                 .anyRequest().authenticated());
 
-
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                        .decoder(jwtDecoder())
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-        );
+                .decoder(jwtDecoder())
+                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
         http.csrf(AbstractHttpConfigurer::disable);
 
@@ -87,16 +84,20 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://web-sach-tre0-8-fe.vercel.app")); // URL frontend
-        configuration.setAllowedOrigins(List.of("http://localhost:5173/")); // URL frontend
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "token", "Content-Type"));
+        configuration.setAllowedOriginPatterns(List.of(
+                "https://web-sach-tre0-8-fe.vercel.app",
+                "https://*.vercel.app",
+                "http://localhost:5173",
+                "http://localhost:*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "token", "Content-Type", "*"));
+        configuration.setExposedHeaders(List.of("Authorization", "token"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Cache preflight requests for 1 hour
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
