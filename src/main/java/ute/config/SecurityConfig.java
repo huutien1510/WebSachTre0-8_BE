@@ -87,7 +87,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("https://web-sach-tre0-8-fe.vercel.app")); // URL frontend
+        configuration.setAllowedOrigins(List.of("https://web-sach-tre0-8-fe.vercel.app")); // URL frontend
         configuration.setAllowedOrigins(List.of("http://localhost:5173/")); // URL frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "token", "Content-Type"));
