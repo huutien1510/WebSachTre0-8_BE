@@ -105,6 +105,8 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "fk_chapter")
     )
     private List<Chapter> chaptersReadingHistory;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<ItemExchangeHistory> itemExchangeHistories;
 
 
 
