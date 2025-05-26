@@ -36,6 +36,7 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/user",
+            "/user/point/{id}",
             "/auth/**",
             "/auth/verify/**",
             "/auth/forgot-password",
@@ -57,7 +58,8 @@ public class SecurityConfig {
             "/orders//cancelOrder/**",
             "/discounts/useDiscount/**",
             "/discounts/checkDiscount/**",
-
+            "/items/**",
+            "/exchange/**",
     };
     @Value("${signer.key}")
     private String SIGNER_KEY;

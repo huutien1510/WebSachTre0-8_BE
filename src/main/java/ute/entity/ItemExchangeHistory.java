@@ -1,10 +1,12 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "item_exchange_history")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ItemExchangeHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +34,10 @@ public class ItemExchangeHistory {
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date exchangeDate;
+    private LocalDateTime exchangeDate;
+
+    @Column
+    private Boolean used = false;
 
     @Column(columnDefinition = "nvarchar(50)")
     private String status; // "SUCCESS", "FAILED", "CANCELLED", ...

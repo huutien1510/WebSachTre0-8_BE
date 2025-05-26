@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -28,11 +29,7 @@ public class Cart {
     private Account account;
 
     @ManyToMany
-    @JoinTable(
-            name = "cart_book",
-            joinColumns = @JoinColumn(name = "fk_cart"),
-            inverseJoinColumns = @JoinColumn(name = "fk_book")
-    )
+    @JoinTable(name = "cart_book", joinColumns = @JoinColumn(name = "fk_cart"), inverseJoinColumns = @JoinColumn(name = "fk_book"))
     @ToString.Exclude
     @JsonManagedReference
     private List<Book> books;

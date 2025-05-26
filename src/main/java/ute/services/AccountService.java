@@ -85,4 +85,10 @@ public class AccountService {
         account.setIs_deleted(!account.getIs_deleted());
         accountRepository.save(account);
     }
+
+    public Integer getTotalPoints(Integer id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return account.getBonusPoint();
+    }
 }

@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,12 +25,8 @@ public class Book {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(
-            name = "book_genre",
-            joinColumns = @JoinColumn(name = "fk_book"),
-            inverseJoinColumns = @JoinColumn(name = "fk_genre")
-    )
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+    @JoinTable(name = "book_genre", joinColumns = @JoinColumn(name = "fk_book"), inverseJoinColumns = @JoinColumn(name = "fk_genre"))
     @ToString.Exclude
     @JsonManagedReference
     private List<Genre> genres;
@@ -52,7 +49,7 @@ public class Book {
     @JsonBackReference
     private List<OrderDetail> orderDetails;
 
-    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonManagedReference
     private List<Chapter> chapters;
@@ -66,6 +63,6 @@ public class Book {
     @JsonBackReference
     private List<Account> accounts;
 
-    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Rating> ratings;
 }

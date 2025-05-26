@@ -43,6 +43,7 @@ import java.util.*;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
     final AccountRepository accountRepository;
+    final PointService pointService;
     final EmailUtil emailUtil;
     AccountMapper accountMapper;
     @NonFinal
@@ -117,6 +118,7 @@ public class AuthService {
                 account.setAvatar("https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg");
 
                 Account savedUser =  accountRepository.save(account);
+                pointService.addRegisterPoints(savedUser);
 
                 String hashedEmail = passwordEncoder.encode(savedUser.getEmail());
                 String verifyUrl = appUrl + "/auth/verify?email=" + savedUser.getEmail() + "&token=" + hashedEmail;
@@ -125,6 +127,7 @@ public class AuthService {
 
                 String emailContent = emailTemplate.replace("{{verifyUrl}}", verifyUrl);
                 emailUtil.sendMail(savedUser.getEmail(), "Chỉ còn một bước nữa để hoàn tất đăng ký của bạn!", emailContent);
+                
 
                 return ApiResponse.builder()
                         .message("Tài khoản đăng ký thành công. Vui lòng xác nhận qua email.")

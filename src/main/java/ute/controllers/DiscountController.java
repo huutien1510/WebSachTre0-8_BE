@@ -13,6 +13,8 @@ import ute.dto.response.DiscountResponse;
 import ute.entity.Discount;
 import ute.services.DiscountService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/discounts")
 @RequiredArgsConstructor
@@ -20,11 +22,20 @@ import ute.services.DiscountService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DiscountController {
     DiscountService discountService;
+    // lấy tất cả discount có phân trang
     @GetMapping("/getAll")
     ApiResponse<Page<DiscountResponse>> getAllDiscounts(@RequestParam(defaultValue = "0") Integer page,
                                                         @RequestParam(defaultValue = "10") Integer size){
         ApiResponse<Page<DiscountResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(discountService.getAllDiscount(page,size));
+        return apiResponse;
+    }
+    // lấy tát cả discount không phân trang
+    @GetMapping("/getAllByGift")
+    ApiResponse<List<DiscountResponse>> getAllDiscountByGift(){
+        ApiResponse<List<DiscountResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(discountService.getAllDiscountByGift());
+        apiResponse.setCode(200);
         return apiResponse;
     }
     @PostMapping("/add")

@@ -17,7 +17,9 @@ import ute.exception.AppException;
 import ute.exception.ErrorCode;
 import ute.repository.DiscountRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -38,6 +40,22 @@ public class DiscountService {
                 discount.getEndDate(),
                 discount.getQuantity()
          ));
+    }
+    // lấy tất cả discount không phân trang
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<DiscountResponse> getAllDiscountByGift() {
+        List<Discount> discounts = discountRepository.findAllActiveDiscounts();
+        return discounts != null ? discounts.stream()
+                .map(discount -> new DiscountResponse(
+                        discount.getId(),
+                        discount.getCode(),
+                        discount.getType(),
+                        discount.getValue(),
+                        discount.getStartDate(),
+                        discount.getEndDate(),
+                        discount.getQuantity()
+                ))
+                .collect(Collectors.toList()) : new ArrayList<>();
     }
     @PreAuthorize("hasRole('ADMIN')")
     public Discount saveOrUpdateDiscount(RequestDiscount requestDiscount) {
