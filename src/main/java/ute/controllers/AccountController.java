@@ -62,4 +62,11 @@ public class AccountController {
                 .data(result)
                 .build();
     }
+    @GetMapping("point/{id}")
+    public ApiResponse<Integer> getPointById(@PathVariable Integer id) {
+        return ApiResponse.<Integer>builder()
+                .code(200)
+                .data(accountService.getTotalPoints(id))
+                .build();
+    }
 }

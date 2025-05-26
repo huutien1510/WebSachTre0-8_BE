@@ -41,6 +41,11 @@ public enum ErrorCode {
     DISCOUNT_INVALID(400,HttpStatus.BAD_REQUEST, "Mã giảm giá đã hết số lượng. Vui lòng thử mã khác."),
     PAYMENT_METHOD_INVALID(400,HttpStatus.BAD_REQUEST, "Chỉ hỗ trợ thanh toán lại cho phương thức MoMo."),
     ORDER_INVALID_STATUS(400,HttpStatus.BAD_REQUEST, "Chỉ có thể thanh toán lại cho đơn hàng ở trạng thái 'Chờ thanh toán'."),
+    POINT_NOT_ENOUGH(400,HttpStatus.BAD_REQUEST, "Điểm không đủ để thực hiện giao dịch"),
+    VOUCHER_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Voucher không tồn tại"),
+    VOUCHER_INVALID(400,HttpStatus.BAD_REQUEST, "Voucher không hợp lệ"),
+    VOUCHER_ALREADY_USED(400,HttpStatus.BAD_REQUEST, "Voucher đã được sử dụng"),
+    VOUCHER_EXPIRED(400,HttpStatus.BAD_REQUEST, "Voucher đã hết hạn"),
     ;
 
     private int status;

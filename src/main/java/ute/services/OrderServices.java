@@ -21,6 +21,7 @@ import ute.exception.AppException;
 import ute.exception.ErrorCode;
 import ute.repository.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,10 @@ public class OrderServices {
     AccountRepository accountRepository;
     DiscountRepository discountRepository;
     BookRepository bookRepository;
+    ItemExchangeHistoryRepository itemExchangeHistoryRepository;
+    PointService pointService;
     MomoPaymentService momoPaymentService;
+
     public Page<OrderReponse> getOrderByAccount(Integer accountID, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Orders> orders = orderRepository.getOrderByAccount(accountID, pageable);
@@ -53,16 +57,15 @@ public class OrderServices {
                                 orderDetail.getBook().getName(),
                                 orderDetail.getBook().getType(),
                                 orderDetail.getBook().getThumbnail(),
-                                orderDetail.getQuantity()
-                        ))
+                                orderDetail.getQuantity()))
                         .collect(Collectors.toList()),
                 order.getAccount().getId(),
                 order.getAccount().getName(),
                 order.getDiscount() != null ? order.getDiscount().getId() : null,
-                null
-        ));
+                null));
     }
-    public Page<OrderReponse> getAllOrder(int page, int size){
+
+    public Page<OrderReponse> getAllOrder(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Orders> orders = orderRepository.findAll(pageable);
         return orders.map(order -> new OrderReponse(
@@ -79,20 +82,43 @@ public class OrderServices {
                                 orderDetail.getBook().getName(),
                                 orderDetail.getBook().getType(),
                                 orderDetail.getBook().getThumbnail(),
-                                orderDetail.getQuantity()
-                        ))
+                                orderDetail.getQuantity()))
                         .collect(Collectors.toList()),
                 order.getAccount().getId(),
                 order.getAccount().getName(),
                 order.getDiscount() != null ? order.getDiscount().getId() : null,
-                null
-        ));
+                null));
     }
 
     @PostAuthorize("returnObject.accountName == authentication.name")
     public OrderReponse createOrder(OrderRequest orderRequest) {
         Account account = accountRepository.findById(orderRequest.getAccount())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        ItemExchangeHistory voucherHistory = null;
+        if (orderRequest.getItemExchangeHistoryId() != null) {
+           voucherHistory = itemExchangeHistoryRepository.findById(orderRequest.getItemExchangeHistoryId())
+                   .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+
+           // Kiểm tra voucher thuộc về user
+           if (!voucherHistory.getAccount().getId().equals(account.getId())) {
+               throw new AppException(ErrorCode.VOUCHER_INVALID);
+           }
+           // Kiểm tra đã dùng chưa
+           if (Boolean.TRUE.equals(voucherHistory.getUsed())) {
+               throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
+           }
+           // Kiểm tra hạn sử dụng (nếu có)
+           if (voucherHistory.getItem().getDiscount() != null &&
+                   voucherHistory.getItem().getDiscount().getEndDate() != null &&
+                   voucherHistory.getItem().getDiscount().getEndDate().isBefore(LocalDate.now())) {
+               throw new AppException(ErrorCode.VOUCHER_EXPIRED);
+           }
+
+            // Đánh dấu đã dùng
+            voucherHistory.setUsed(true);
+            itemExchangeHistoryRepository.save(voucherHistory);
+        }
 
         // Áp dụng mã giảm giá (nếu có)
         Discount discount = null;
@@ -150,8 +176,7 @@ public class OrderServices {
                 momoPayUrl = momoPaymentService.createPaymentUrl(
                         newOrder.getId().toString(),
                         newOrder.getTotalPrice(),
-                        "Thanh toán đơn hàng #" + newOrder.getId()
-                );
+                        "Thanh toán đơn hàng #" + newOrder.getId());
             } catch (Exception e) {
                 throw new AppException(ErrorCode.PAYMENT_ERROR);
             }
@@ -177,8 +202,7 @@ public class OrderServices {
                 momoPayUrl = momoPaymentService.createPaymentUrl(
                         existingOrder.getId().toString(),
                         existingOrder.getTotalPrice(),
-                        "Thanh toán lại đơn hàng #" + existingOrder.getId()
-                );
+                        "Thanh toán lại đơn hàng #" + existingOrder.getId());
             } catch (Exception e) {
                 throw new AppException(ErrorCode.PAYMENT_ERROR);
             }
@@ -189,9 +213,6 @@ public class OrderServices {
         // Trả về thông tin đơn hàng với link thanh toán mới
         return mapToOrderResponse(existingOrder, momoPayUrl);
     }
-
-
-
 
     private OrderReponse mapToOrderResponse(Orders order, String momoPayUrl) {
         return new OrderReponse(
@@ -207,16 +228,15 @@ public class OrderServices {
                                 orderDetail.getBook().getName(),
                                 orderDetail.getBook().getType(),
                                 orderDetail.getBook().getThumbnail(),
-                                orderDetail.getQuantity()
-                        ))
+                                orderDetail.getQuantity()))
                         .collect(Collectors.toList()),
                 order.getAccount().getId(),
                 order.getAccount().getName(),
                 order.getDiscount() != null ? order.getDiscount().getId() : null,
-                momoPayUrl
-        );
+                momoPayUrl);
     }
-    public Orders updateOrderState(Integer orderID, String state){
+
+    public Orders updateOrderState(Integer orderID, String state) {
         Orders order = orderRepository.findById(orderID)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         order.setStatus(state);
@@ -227,18 +247,24 @@ public class OrderServices {
                 bookRepository.save(book);
             }
         });
+        if (state.equals("Đã thanh toán")) {
+            pointService.addPointsFromOrder(order.getAccount(), order);
+            pointService.addFirstPurchasePoints(order.getAccount());
+        }
         return orderRepository.save(order);
     }
-    public Long totalPrice(){
+
+    public Long totalPrice() {
         return orderRepository.totalPrice();
     }
 
-    public boolean  checkBuySoftBook(Integer accountID, Integer bookID) {
+    public boolean checkBuySoftBook(Integer accountID, Integer bookID) {
         Pageable pageable = PageRequest.of(0, 100);
         Page<Orders> orders = orderRepository.getOrderByAccount(accountID, pageable);
         for (Orders order : orders) {
             for (OrderDetail orderDetail : order.getOrderDetails()) {
-                if (orderDetail.getBook().getType().equals("Sach mem") && orderDetail.getBook().getId().equals(bookID) && order.getStatus().equals("Đã thanh toán")) {
+                if (orderDetail.getBook().getType().equals("Sach mem") && orderDetail.getBook().getId().equals(bookID)
+                        && order.getStatus().equals("Đã thanh toán")) {
                     return true;
                 }
             }
@@ -247,7 +273,7 @@ public class OrderServices {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public Orders updateOrder(Integer orderID, OrderUpdaterRequest body){
+    public Orders updateOrder(Integer orderID, OrderUpdaterRequest body) {
         Orders orders = orderRepository.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
@@ -255,24 +281,27 @@ public class OrderServices {
         orders.setStatus(body.getStatus());
         orders.setAddress(body.getAddress());
         orders.setPaymentMethod(body.getPaymentMethod());
-        if (body.getStatus().equals("Đã giao hàng")){
+        if (body.getStatus().equals("Đã giao hàng")) {
             orders.getOrderDetails().forEach(orderDetail -> {
                 Book book = orderDetail.getBook();
                 book.setQuantity(book.getQuantity() - orderDetail.getQuantity());
                 bookRepository.save(book);
             });
+            pointService.addPointsFromOrder(orders.getAccount(), orders);
+            pointService.addFirstPurchasePoints(orders.getAccount());
         }
 
         return orderRepository.save(orders);
     }
-    public void updateCancel(Integer orderID){
+
+    public void updateCancel(Integer orderID) {
         Orders orders = orderRepository.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         orders.setStatus("Đã hủy");
         orderRepository.save(orders);
     }
 
-    public void deleteOrder(Integer orderID){
+    public void deleteOrder(Integer orderID) {
         orderRepository.deleteById(orderID);
     }
 }

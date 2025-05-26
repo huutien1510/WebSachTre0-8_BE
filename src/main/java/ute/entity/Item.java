@@ -21,22 +21,26 @@ public class Item {
     private Integer id;
 
     @Column(columnDefinition = "nvarchar(20)")
-    private String type; // "voucher", "gift", ...
+    private String type; 
 
     @Column(columnDefinition = "nvarchar(100)")
     private String name;
 
     @Column
-    private Integer point; // Số điểm cần để đổi
+    private Integer point;
 
     @Column(columnDefinition = "nvarchar(100)")
-    private String link; // Link voucher hoặc thông tin khác
+    private String link; 
 
     @Column
-    private Integer quantity; // Số lượng còn lại
+    private Integer quantity; 
 
     @Column
-    private Boolean active; // Trạng thái hoạt động
+    private Boolean active; 
+
+    @ManyToOne
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
 
     @ManyToMany(mappedBy = "items")
     private List<Account> accounts;

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ute.entity.Discount;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,6 @@ public interface DiscountRepository extends JpaRepository<Discount,Integer> {
     @Query("SELECT d FROM Discount d")
     Page<Discount> findAll(Pageable pageable);
     boolean existsByCode(String code);
+    @Query("SELECT d FROM Discount d WHERE d.startDate <= CURRENT_DATE AND d.endDate >= CURRENT_DATE")
+    List<Discount> findAllActiveDiscounts();
 }

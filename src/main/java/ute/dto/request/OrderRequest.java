@@ -26,5 +26,6 @@ public class OrderRequest {
     private String paymentMethod;
     private Integer account;
     private String discountCode;
+    private Integer itemExchangeHistoryId;
     private List<OrderDetailResponse> orderDetails;
 }

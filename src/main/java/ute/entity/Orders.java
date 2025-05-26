@@ -1,5 +1,6 @@
 package ute.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -10,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -38,6 +40,7 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "fk_account")
+    @JsonBackReference
     private Account account;
 
     @ManyToOne
