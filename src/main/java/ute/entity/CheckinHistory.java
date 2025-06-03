@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 @AllArgsConstructor
@@ -27,5 +28,5 @@ public class CheckinHistory {
     @Column
     private Integer bonusPoint;
     @Column(columnDefinition = "date")
-    private Date checkinDate;
+    private LocalDate checkinDate;
 }

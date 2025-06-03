@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ute.dto.request.OrderRequest;
@@ -18,7 +19,10 @@ import ute.exception.AppException;
 import ute.exception.ErrorCode;
 import ute.services.OrderServices;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -29,8 +33,9 @@ public class OrderControllers {
     OrderServices orderServices;
 
     @GetMapping("/account/{accountID}")
-    ApiResponse<Page<OrderReponse>> getOrderByAccount(@PathVariable Integer accountID, @RequestParam(defaultValue = "0") Integer page,
-                                                      @RequestParam(defaultValue = "10") Integer size){
+    ApiResponse<Page<OrderReponse>> getOrderByAccount(@PathVariable Integer accountID,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
         ApiResponse<Page<OrderReponse>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         apiResponse.setData(orderServices.getOrderByAccount(accountID, page, size));
@@ -39,54 +44,56 @@ public class OrderControllers {
 
     @GetMapping("/getAll")
     ApiResponse<Page<OrderReponse>> getAllOrder(@RequestParam(defaultValue = "0") Integer page,
-                                               @RequestParam(defaultValue = "10") Integer size){
+            @RequestParam(defaultValue = "10") Integer size) {
         ApiResponse<Page<OrderReponse>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         apiResponse.setData(orderServices.getAllOrder(page, size));
         return apiResponse;
     }
+
     @GetMapping("/totalPrice")
-    ApiResponse<Long> totalPrice(){
+    ApiResponse<Long> totalPrice() {
         ApiResponse<Long> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         apiResponse.setData(orderServices.totalPrice());
         return apiResponse;
     }
+
     @PostMapping
-    public ApiResponse<OrderReponse> createOrder(@RequestBody OrderRequest request){
+    public ApiResponse<OrderReponse> createOrder(@RequestBody OrderRequest request) {
         ApiResponse<OrderReponse> apiResponse = new ApiResponse<>();
         var result = orderServices.createOrder(request);
         apiResponse.setData(result);
         apiResponse.setMessage("Create order successfully");
         return apiResponse;
     }
+
     @GetMapping("/checkSoftBookBought/{accountID}/{bookID}")
     public ApiResponse<Boolean> checkSoftBookBought(@PathVariable Integer accountID,
-                                                    @PathVariable Integer bookID) {
+            @PathVariable Integer bookID) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-        apiResponse.setData(orderServices.checkBuySoftBook(accountID,bookID));
+        apiResponse.setData(orderServices.checkBuySoftBook(accountID, bookID));
         return apiResponse;
     }
 
     @PatchMapping("/updateOrder/{orderID}")
     ApiResponse<Orders> updateOrder(@PathVariable Integer orderID,
-                                    @RequestBody OrderUpdaterRequest body)
-    {
+            @RequestBody OrderUpdaterRequest body) {
         ApiResponse<Orders> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
-        apiResponse.setData(orderServices.updateOrder(orderID,body));
+        apiResponse.setData(orderServices.updateOrder(orderID, body));
         return apiResponse;
     }
+
     @GetMapping("/cancelOrder/{orderID}")
-    ApiResponse cancelOrder(@PathVariable Integer orderID)
-    {
+    ApiResponse cancelOrder(@PathVariable Integer orderID) {
         ApiResponse apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         orderServices.updateCancel(orderID);
         apiResponse.setMessage("Hủy đơn hàng thành công");
         return apiResponse;
     }
-      
+
     @GetMapping("/momo-return")
     public ApiResponse<Orders> handlePaymentReturn(@RequestParam String orderId, @RequestParam String resultCode) {
         try {
@@ -105,20 +112,54 @@ public class OrderControllers {
     }
 
     @DeleteMapping("/deleteOrder/{orderID}")
-    ApiResponse<String> deleteOrder(@PathVariable Integer orderID)
-    {
+    ApiResponse<String> deleteOrder(@PathVariable Integer orderID) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         orderServices.deleteOrder(orderID);
         apiResponse.setCode(200);
         apiResponse.setData("Xóa thành công");
         return apiResponse;
     }
+
     @GetMapping("/retryOrder/{orderID}")
-    ApiResponse<OrderReponse> getOrderDetail(@PathVariable Integer orderID)
-    {
+    ApiResponse<OrderReponse> getOrderDetail(@PathVariable Integer orderID) {
         ApiResponse<OrderReponse> apiResponse = new ApiResponse<>();
         apiResponse.setCode(200);
         apiResponse.setData(orderServices.retryPayment(orderID));
+        return apiResponse;
+    }
+
+    // Lấy doanh thu theo tháng
+    @GetMapping("/monthly-revenue/{year}")
+    ApiResponse<List<Map<String, Object>>> getMonthlyRevenue(@PathVariable int year) {
+        ApiResponse<List<Map<String, Object>>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(orderServices.getMonthlyRevenue(year));
+        return apiResponse;
+    }
+
+    @GetMapping("/daily-revenue/{date}")
+    public ApiResponse<Double> getDailyRevenue(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        ApiResponse<Double> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(orderServices.getDailyRevenue(date));
+        return apiResponse;
+    }
+
+    @GetMapping("/yearly-revenue")
+    ApiResponse<List<Map<String, Object>>> getYearlyRevenue() {
+        ApiResponse<List<Map<String, Object>>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(orderServices.getYearlyRevenue());
+        return apiResponse;
+    }
+
+    @GetMapping("/daily-revenue/{year}/{month}")
+    public ApiResponse<List<Map<String, Object>>> getDailyRevenueByMonth(@PathVariable int year,
+            @PathVariable int month) {
+        ApiResponse<List<Map<String, Object>>> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(200);
+        apiResponse.setData(orderServices.getDailyRevenueByMonth(year, month));
         return apiResponse;
     }
 
