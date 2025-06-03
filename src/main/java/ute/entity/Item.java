@@ -29,7 +29,7 @@ public class Item {
     @Column
     private Integer point;
 
-    @Column(columnDefinition = "nvarchar(100)")
+    @Column(columnDefinition = "nvarchar(255)")
     private String link; 
 
     @Column

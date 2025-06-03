@@ -22,7 +22,10 @@ import ute.exception.ErrorCode;
 import ute.repository.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -97,23 +100,23 @@ public class OrderServices {
 
         ItemExchangeHistory voucherHistory = null;
         if (orderRequest.getItemExchangeHistoryId() != null) {
-           voucherHistory = itemExchangeHistoryRepository.findById(orderRequest.getItemExchangeHistoryId())
-                   .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+            voucherHistory = itemExchangeHistoryRepository.findById(orderRequest.getItemExchangeHistoryId())
+                    .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
 
-           // Kiểm tra voucher thuộc về user
-           if (!voucherHistory.getAccount().getId().equals(account.getId())) {
-               throw new AppException(ErrorCode.VOUCHER_INVALID);
-           }
-           // Kiểm tra đã dùng chưa
-           if (Boolean.TRUE.equals(voucherHistory.getUsed())) {
-               throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
-           }
-           // Kiểm tra hạn sử dụng (nếu có)
-           if (voucherHistory.getItem().getDiscount() != null &&
-                   voucherHistory.getItem().getDiscount().getEndDate() != null &&
-                   voucherHistory.getItem().getDiscount().getEndDate().isBefore(LocalDate.now())) {
-               throw new AppException(ErrorCode.VOUCHER_EXPIRED);
-           }
+            // Kiểm tra voucher thuộc về user
+            if (!voucherHistory.getAccount().getId().equals(account.getId())) {
+                throw new AppException(ErrorCode.VOUCHER_INVALID);
+            }
+            // Kiểm tra đã dùng chưa
+            if (Boolean.TRUE.equals(voucherHistory.getUsed())) {
+                throw new AppException(ErrorCode.VOUCHER_ALREADY_USED);
+            }
+            // Kiểm tra hạn sử dụng (nếu có)
+            if (voucherHistory.getItem().getDiscount() != null &&
+                    voucherHistory.getItem().getDiscount().getEndDate() != null &&
+                    voucherHistory.getItem().getDiscount().getEndDate().isBefore(LocalDate.now())) {
+                throw new AppException(ErrorCode.VOUCHER_EXPIRED);
+            }
 
             // Đánh dấu đã dùng
             voucherHistory.setUsed(true);
@@ -303,5 +306,51 @@ public class OrderServices {
 
     public void deleteOrder(Integer orderID) {
         orderRepository.deleteById(orderID);
+    }
+
+    // Lấy doanh thu theo tháng
+    public List<Map<String, Object>> getMonthlyRevenue(int year) {
+        List<Object[]> results = orderRepository.getMonthlyRevenue(year);
+        return results.stream()
+                .map(row -> {
+                    Map<String, Object> monthlyData = new HashMap<>();
+                    monthlyData.put("month", row[0]);
+                    monthlyData.put("total", row[1]);
+                    return monthlyData;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public Double getDailyRevenue(LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+        Double total = orderRepository.getDailyRevenue(start, end);
+        return total != null ? total : 0.0;
+    }
+
+    public List<Map<String, Object>> getYearlyRevenue() {
+        List<Object[]> results = orderRepository.getYearlyRevenue();
+        return results.stream()
+                .map(row -> {
+                    Map<String, Object> yearlyData = new HashMap<>();
+                    yearlyData.put("year", row[0]);
+                    yearlyData.put("total", row[1]);
+                    return yearlyData;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getDailyRevenueByMonth(int year, int month) {
+        List<Map<String, Object>> result = new java.util.ArrayList<>();
+        int daysInMonth = java.time.YearMonth.of(year, month).lengthOfMonth();
+        for (int day = 1; day <= daysInMonth; day++) {
+            java.time.LocalDate date = java.time.LocalDate.of(year, month, day);
+            Double total = getDailyRevenue(date);
+            java.util.Map<String, Object> dailyData = new java.util.HashMap<>();
+            dailyData.put("day", day);
+            dailyData.put("total", total);
+            result.add(dailyData);
+        }
+        return result;
     }
 }

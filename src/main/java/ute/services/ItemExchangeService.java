@@ -8,6 +8,8 @@ import ute.dto.response.AccountItemResponse;
 import ute.dto.response.ItemExchangeHistoryResponse;
 import ute.entity.*;
 import ute.repository.*;
+import ute.exception.AppException;
+import ute.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,18 +28,18 @@ public class ItemExchangeService {
         Optional<Account> accountOpt = accountRepository.findById(accountId);
         Optional<Item> itemOpt = itemRepository.findById(itemId);
         if (accountOpt.isEmpty() || itemOpt.isEmpty()) {
-            return "Account hoặc Item không tồn tại";
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
         Account account = accountOpt.get();
         Item item = itemOpt.get();
         if (!Boolean.TRUE.equals(item.getActive())) {
-            return "Vật phẩm không hoạt động";
+            throw new AppException(ErrorCode.VOUCHER_INVALID);
         }
         if (item.getQuantity() == null || item.getQuantity() <= 0) {
-            return "Vật phẩm đã hết";
+            throw new AppException(ErrorCode.VOUCHER_INVALID);
         }
         if (account.getBonusPoint() == null || account.getBonusPoint() < item.getPoint()) {
-            return "Bạn không đủ điểm để đổi vật phẩm này";
+            throw new AppException(ErrorCode.POINT_NOT_ENOUGH);
         }
         // Trừ điểm và giảm số lượng
         account.setBonusPoint(account.getBonusPoint() - item.getPoint());
@@ -46,12 +48,12 @@ public class ItemExchangeService {
         itemRepository.save(item);
         // Lưu lịch sử
         ItemExchangeHistory history = ItemExchangeHistory.builder()
-        .account(account)
-        .item(item)
-        .pointUsed(item.getPoint())
-        .exchangeDate(LocalDateTime.now()) 
-        .status("SUCCESS")
-        .build();
+                .account(account)
+                .item(item)
+                .pointUsed(item.getPoint())
+                .exchangeDate(LocalDateTime.now())
+                .status("SUCCESS")
+                .build();
         itemExchangeHistoryRepository.save(history);
         return "Đổi vật phẩm thành công";
     }
@@ -65,34 +67,34 @@ public class ItemExchangeService {
 
     public List<AccountItemResponse> getAccountItemInventory(Integer accountId) {
         List<ItemExchangeHistory> histories = itemExchangeHistoryRepository
-            .findByAccountIdOrderByExchangeDateDesc(accountId)
-            .stream()
-            .filter(h -> "SUCCESS".equals(h.getStatus())&& !Boolean.TRUE.equals(h.getUsed()))
-            .collect(Collectors.toList());
-    
+                .findByAccountIdOrderByExchangeDateDesc(accountId)
+                .stream()
+                .filter(h -> "SUCCESS".equals(h.getStatus()) && !Boolean.TRUE.equals(h.getUsed()))
+                .collect(Collectors.toList());
+
         return histories.stream()
-            .collect(Collectors.groupingBy(h -> h.getItem().getId()))
-            .values().stream()
-            .map(list -> {
-                ItemExchangeHistory first = list.get(0);
-                Item item = first.getItem();
-                return AccountItemResponse.builder()
-                        .id(first.getId())
-                    .itemId(item.getId())
-                    .itemName(item.getName())
-                    .itemType(item.getType())
-                    .itemImage(item.getLink())
-                    .pointUsed(item.getPoint())
-                    .quantity(list.size())
-                    .codeVoucher(item.getDiscount() != null ? item.getDiscount().getCode() : null)
-                    .voucherType(item.getDiscount() != null ? item.getDiscount().getType() : null)
-                    .voucherValue(item.getDiscount() != null ? item.getDiscount().getValue() : null)
-                    .voucherEndDate(item.getDiscount() != null ? item.getDiscount().getEndDate() : null)
-                    .build();
-            })
-            .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(h -> h.getItem().getId()))
+                .values().stream()
+                .map(list -> {
+                    ItemExchangeHistory first = list.get(0);
+                    Item item = first.getItem();
+                    return AccountItemResponse.builder()
+                            .id(first.getId())
+                            .itemId(item.getId())
+                            .itemName(item.getName())
+                            .itemType(item.getType())
+                            .itemImage(item.getLink())
+                            .pointUsed(item.getPoint())
+                            .quantity(list.size())
+                            .codeVoucher(item.getDiscount() != null ? item.getDiscount().getCode() : null)
+                            .voucherType(item.getDiscount() != null ? item.getDiscount().getType() : null)
+                            .voucherValue(item.getDiscount() != null ? item.getDiscount().getValue() : null)
+                            .voucherEndDate(item.getDiscount() != null ? item.getDiscount().getEndDate() : null)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
-    
+
     private ItemExchangeHistoryResponse mapToResponse(ItemExchangeHistory history) {
         return ItemExchangeHistoryResponse.builder()
                 .id(history.getId())
