@@ -10,4 +10,5 @@ import ute.entity.CheckinHistory;
 public interface CheckHistoryRepository extends JpaRepository<CheckinHistory, Integer> {
     List<CheckinHistory> findByAccountIdOrderByCheckinDateDesc(Integer accountId);
     boolean existsByAccountIdAndCheckinDate(Integer accountId, LocalDate checkinDate);
+    int countByAccountIdAndIsRecoveryTrueAndCheckinDateAfter(Integer accountId, LocalDate checkinDate);
 }
