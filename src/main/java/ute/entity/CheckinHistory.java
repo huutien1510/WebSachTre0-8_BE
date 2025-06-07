@@ -29,4 +29,8 @@ public class CheckinHistory {
     private Integer bonusPoint;
     @Column(columnDefinition = "date")
     private LocalDate checkinDate;
+    @Column(name = "is_recovery")
+    private Boolean isRecovery;
+    @Column
+    private Integer recoveryCount;
 }

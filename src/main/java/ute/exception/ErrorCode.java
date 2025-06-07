@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    INVALID_EMAIL_FORMAT(400, HttpStatus.BAD_REQUEST, "Định dạng email không hợp lệ"),
+    EMAIL_SENDING_FAILED(500, HttpStatus.INTERNAL_SERVER_ERROR, "Gửi email thất bại"),
     USER_EXISTED(409,HttpStatus.BAD_REQUEST, "Tài khoản đã tồn tại"),
     USER_NOT_FOUND(404, HttpStatus.NOT_FOUND,"Tài khoản không tồn tại"),
     UNCAUGHT_EXCEPTION(500, HttpStatus.INTERNAL_SERVER_ERROR ,"Lỗi không xác định"),

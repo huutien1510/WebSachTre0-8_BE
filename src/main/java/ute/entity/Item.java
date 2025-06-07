@@ -35,7 +35,7 @@ public class Item {
     @Column
     private Integer quantity; 
 
-    @Column
+    @Column(name = "active")
     private Boolean active; 
 
     @ManyToOne

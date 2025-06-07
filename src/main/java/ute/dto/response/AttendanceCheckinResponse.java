@@ -7,4 +7,5 @@ public class AttendanceCheckinResponse {
     private int pointsReceived;
     private int totalPoints;
     private int streak;
+    private boolean isRecovery;
 }
