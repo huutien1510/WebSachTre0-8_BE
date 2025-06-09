@@ -7,10 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ute.dto.request.ExtractedBookInfo;
 import ute.dto.response.BookDetailResponse;
 import ute.entity.Book;
 import ute.services.BookServices;
@@ -42,15 +40,11 @@ public class OpenAIControllers {
     public ResponseEntity<?> ask(@RequestBody(required = false) Map<String,String> body) {
         String question = body.get("question");
 
-
-        // Tìm sản phẩm liên quan theo từ khóa câu hỏi
-        Page<BookDetailResponse> matchedBooks = bookServices.getBookByKeyWord(question,0,10);
-        List<BookDetailResponse> listMatchedBooks = matchedBooks.getContent();
-
         // Gọi OpenAI để trả lời dựa trên sản phẩm
-        String answer = openAIService.getChatGPTResponse(question, listMatchedBooks);
+        String answer = openAIService.getChatGPTResponse(question);
         System.out.println((answer));
 
         return ResponseEntity.ok(Map.of("answer", answer));
     }
+
 }
