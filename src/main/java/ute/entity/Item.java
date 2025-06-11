@@ -42,8 +42,6 @@ public class Item {
     @JoinColumn(name = "discount_id")
     private Discount discount;
 
-    @ManyToMany(mappedBy = "items")
-    private List<Account> accounts;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<ItemExchangeHistory> itemExchangeHistories;
