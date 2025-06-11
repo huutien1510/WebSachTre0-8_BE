@@ -31,7 +31,6 @@ public class OpenAIControllers {
     public ResponseEntity<?> startConversation() {
         // Gọi OpenAI để trả lời dựa trên sản phẩm
         String answer = openAIService.startConversation();
-        System.out.println(answer);
 
         return ResponseEntity.ok(Map.of("answer", answer));
     }
@@ -42,7 +41,6 @@ public class OpenAIControllers {
 
         // Gọi OpenAI để trả lời dựa trên sản phẩm
         String answer = openAIService.getChatGPTResponse(question);
-        System.out.println((answer));
 
         return ResponseEntity.ok(Map.of("answer", answer));
     }
