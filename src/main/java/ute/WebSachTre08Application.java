@@ -9,5 +9,4 @@ public class WebSachTre08Application {
 	public static void main(String[] args) {
 		SpringApplication.run(WebSachTre08Application.class, args);
 	}
-
 }

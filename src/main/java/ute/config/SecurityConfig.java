@@ -60,6 +60,7 @@ public class SecurityConfig {
             "/discounts/checkDiscount/**",
             "/items/**",
             "/exchange/**",
+            "/chatai/**",
     };
     @Value("${signer.key}")
     private String SIGNER_KEY;
