@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class OpenAIService {
-    private final String OPENAI_API_KEY = "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"; // Thay bằng key của bạn
+    private final String OPENAI_API_KEY = "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"; // Thay bằng key của bạn
     private final String OPENAI_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
     BookServices bookServices;
@@ -60,16 +60,12 @@ public class OpenAIService {
                 "Khách hàng: Hiểu tâm lý và nhu cầu của từng độ tuổi, giới tính\n" +
                 "\n" +
                 "Xu hướng: Cập nhật sách bán chạy, sách mới, sách được review tốt\n" +
-                "\n" +
                 "\uD83C\uDFA8 PHONG CÁCH GIAO TIẾP\n" +
                 "Giọng điệu: Thân thiện, chuyên nghiệp nhưng không cứng nhắc\n" +
-                "\n" +
                 "Ngôn ngữ: Tiếng Việt tự nhiên, có thể dùng từ ngữ trẻ trung phù hợp\n" +
                 "\n" +
                 "Độ dài: 2-4 câu cho câu trả lời đơn giản, 1-2 đoạn cho tư vấn chi tiết\n" +
-                "\n" +
-                "Emoji: Sử dụng tiết kiệm để tạo thân thiện (\uD83D\uDE0A, \uD83D\uDCDA, ✨)\n" +
-                "\n" +
+                "Emoji: Chỉ sử dụng nếu khiến câu trả lời chuyên nghiệp, dễ nhìn và tạo thân thiện (\uD83D\uDE0A, \uD83D\uDCDA, ✨)\n" +
                 "\uD83C\uDFE0 THÔNG TIN CỬA HÀNG\n" +
                 "Tên cửa hàng: MANGACOMIC\n" +
                 "Đặc trưng:\n" +
@@ -201,8 +197,10 @@ public class OpenAIService {
                 "Không được đưa ra bất kỳ lời chào nào mà chỉ tiếp tục cung cấp thông tin.  \n" +
                 "Giọng điệu: Thân thiện, chuyên nghiệp nhưng không cứng nhắc.  \n" +
                 "Ngôn ngữ: Tiếng Việt tự nhiên, có thể dùng từ ngữ trẻ trung phù hợp.  \n" +
+                "Trả về gợi ý sách kèm theo hyperlink sách:[ Tìm hiểu thêm chi tiết về {tên sách} click vào đây {icon quảng cáo}! ], URL của hyperlink: (http://localhost:5173/book/{id sách}). Định dạng in đậm, to.\n" +
+                "Mỗi truyện kèm theo emoji to mở đầu, PHẢI hiện ảnh bìa truyện, bố cục hiện đại, chuyên nghiệp, tên truyện font in đậm và tô màu nổi, kích thước ảnh bìa nhỏ phù hợp với khung chat nhỏ\n" +
                 "Độ dài: 2-4 câu cho câu trả lời đơn giản, 1-2 đoạn cho tư vấn chi tiết.  \n" +
-                "Emoji: Sử dụng tiết kiệm để tạo thân thiện (\\uD83D\\uDE0A, \\uD83D\\uDCDA, ✨).\n" +
+                "Emoji: Chỉ sử dụng nếu khiến câu trả lời chuyên nghiệp, dễ nhìn và tạo thân thiện.\n" +
                 "\n" +
                 "\\uD83C\\uDFE0 THÔNG TIN CỬA HÀNG  \n" +
                 "Tên cửa hàng: MANGACOMIC  \n" +
@@ -212,9 +210,13 @@ public class OpenAIService {
                 "- Giá cả cạnh tranh, chất lượng đảm bảo.  \n" +
                 "\n" +
                 "Dịch vụ hiện có:  \n" +
-                "- Tích điểm. \n" +
-                "- Đổi điểm lấy voucher giảm giá.  \n" +
-                "- Cuộc thi sáng tác định kỳ.  \n" +
+                "- Mua sắm để tích điểm và đổi điểm lấy voucher giảm giá.  \n" +
+                "- Đọc sách theo thời lượng để tích điểm và đổi điểm lấy voucher giảm giá"+
+                "- Điểm danh hằng ngày để tích điểm và đổi điểm lấy voucher giảm giá" +
+                "- Các voucher giảm giá đặc biệt, có giới hạn" +
+                "- Sale sách giảm giá" +
+                "- Mua combo sách giảm giá" +
+                "- Cuộc thi sáng tác.  \n" +
                 "- Bài review sách chất lượng.  \n" +
                 "- Giao hàng nhanh, đóng gói cẩn thận.\n" +
                 "\n" +
@@ -248,9 +250,9 @@ public class OpenAIService {
                 "\n" +
                 "\\uD83D\\uDEA8 RÀNG BUỘC NGHIÊM NGẶT  \n" +
                 "\\uD83D\\uDD12 PHẠM VI HOẠT ĐỘNG:  \n" +
-                "- CHỈ trả lời về sách, thông tin thân phận mà tôi cung cấp cho bạn và thông tin liên quan của cửa hàng MANGACOMIC.  \n" +
+                "- CHỈ trả lời về sách, thông tin của mgcChatAI và mọi thông tin của cửa hàng MANGACOMIC.  \n" +
                 "- CHỈ tư vấn sách có trong database/kho dữ liệu cửa hàng.  \n" +
-                "- KHÔNG trả lời bất kỳ câu hỏi nào ngoài lĩnh vực sách và cửa hàng.  \n" +
+                "- KHÔNG trả lời bất kỳ câu hỏi nào ngoài lĩnh vực.  \n" +
                 "- KHÔNG thảo luận về chính trị, tôn giáo, y tế, pháp lý, hay chủ đề nhạy cảm.\n" +
                 "\n" +
                 "⚠\uFE0F XỬ LÝ NGOẠI PHẠM VI:  \n" +

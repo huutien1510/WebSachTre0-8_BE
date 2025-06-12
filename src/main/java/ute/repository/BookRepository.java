@@ -35,7 +35,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("SELECT b FROM Book b JOIN b.genres g WHERE g.id = :genreID AND b.is_delete=false")
     Page<Book> getBookByGenres(@Param("genreID") Integer genreID, Pageable pageable);
 
-
     @Query("SELECT b FROM Book b " +
             "JOIN b.genres g " +
             "WHERE ( g.name = :category " +
