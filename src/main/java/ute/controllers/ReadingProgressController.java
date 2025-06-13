@@ -16,17 +16,17 @@ public class ReadingProgressController {
 
         @PostMapping("/progress")
         public ApiResponse<Map<String, Object>> updateProgress(
-                        @RequestParam Integer userId,
-                        @RequestParam Integer secondsRead) {
+                @RequestParam Integer userId,
+                @RequestParam Integer secondsRead) {
                 ReadingProgress progress = readingProgressService.updateProgress(userId, secondsRead);
                 boolean isMissionCompleted = progress.getTotalPoints() >= 20;
                 return ApiResponse.<Map<String, Object>>builder()
-                                .data(Map.of(
-                                                "totalSecondsToday", progress.getTotalSeconds(),
-                                                "totalPointsToday", progress.getTotalPoints(),
-                                                "isMissionCompleted", isMissionCompleted))
-                                .code(200)
-                                .build();
+                        .data(Map.of(
+                                "totalSecondsToday", progress.getTotalSeconds(),
+                                "totalPointsToday", progress.getTotalPoints(),
+                                "isMissionCompleted", isMissionCompleted))
+                        .code(200)
+                        .build();
         }
 
         @GetMapping("/progress")
@@ -34,12 +34,11 @@ public class ReadingProgressController {
                 ReadingProgress progress = readingProgressService.getProgress(userId);
                 boolean isMissionCompleted = progress.getTotalPoints() >= 20;
                 return ApiResponse.<Map<String, Object>>builder()
-                                .data(Map.of(
-                                                "totalSecondsToday", progress.getTotalSeconds(),
-                                                "totalPointsToday", progress.getTotalPoints(),
-                                                "isMissionCompleted", isMissionCompleted))
-                                .code(200)
-                                .build();
+                        .data(Map.of(
+                                "totalSecondsToday", progress.getTotalSeconds(),
+                                "totalPointsToday", progress.getTotalPoints(),
+                                "isMissionCompleted", isMissionCompleted))
+                        .code(200)
+                        .build();
         }
-
 }
