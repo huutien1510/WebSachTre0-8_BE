@@ -41,4 +41,5 @@ public class ReadingProgressController {
                                 .code(200)
                                 .build();
         }
+
 }

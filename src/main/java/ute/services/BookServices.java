@@ -46,6 +46,21 @@ public class BookServices {
                 ));
     }
 
+    public List<BookDetailResponse> getAllBookForChat(){
+        List<Book> books= bookRepository.findAll();
+        return books.stream().map(book -> new BookDetailResponse(
+                book.getId(),
+                book.getName(),
+                book.getAuthor(),
+                book.getDescription(),
+                book.getGenres(), // Trả về danh sách Genre
+                book.getType(),
+                book.getThumbnail(),
+                book.getPrice(),
+                book.getQuantity()
+        )).collect(Collectors.toList());
+    }
+
     public BookDetailResponse getBookByID(Integer bookID){
         Optional<Book> optionalBook = Optional.of(bookRepository.findById(bookID)
                 .orElseThrow(() -> new RuntimeException("Book not found")));

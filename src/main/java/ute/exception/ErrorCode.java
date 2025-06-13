@@ -48,12 +48,10 @@ public enum ErrorCode {
     VOUCHER_INVALID(400,HttpStatus.BAD_REQUEST, "Voucher không hợp lệ"),
     VOUCHER_ALREADY_USED(400,HttpStatus.BAD_REQUEST, "Voucher đã được sử dụng"),
     VOUCHER_EXPIRED(400,HttpStatus.BAD_REQUEST, "Voucher đã hết hạn"),
-<<<<<<< Updated upstream
-=======
     CHAPTER_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Chương không tồn tại"),
     READING_SESSION_ACTIVE(400,HttpStatus.BAD_REQUEST, "Bạn đang có phiên đọc truyện khác"),
     READING_PROGRESS_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Phiên đọc truyện không tồn tại"),
->>>>>>> Stashed changes
+
     ;
 
     private int status;

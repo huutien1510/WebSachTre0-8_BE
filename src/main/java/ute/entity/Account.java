@@ -78,11 +78,6 @@ public class Account {
         private List<Suggestion> suggestions;
 
         @ManyToMany(cascade = CascadeType.ALL)
-        @JoinTable(name = "account_item", joinColumns = @JoinColumn(name = "fk_account"), inverseJoinColumns = @JoinColumn(name = "fk_item"))
-        @JsonManagedReference
-        private List<Item> items;
-
-        @ManyToMany(cascade = CascadeType.ALL)
         @JoinTable(name = "favorites_book", joinColumns = @JoinColumn(name = "fk_account"), inverseJoinColumns = @JoinColumn(name = "fk_book"))
         @JsonManagedReference
         private List<Book> favBooks;
