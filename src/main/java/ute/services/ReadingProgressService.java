@@ -10,6 +10,8 @@ import ute.repository.AccountRepository;
 import ute.repository.ReadingProgressRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,19 @@ public class ReadingProgressService {
         Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         LocalDate today = LocalDate.now();
+        Optional<ReadingProgress> optionalProgress = readingProgressRepository
+                .findByAccountIdAndReadingDate(userId, today);
+
+        ReadingProgress progress;
+        if (optionalProgress.isPresent()) {
+            progress = optionalProgress.get();
+        } else {
+            progress = new ReadingProgress();
+            progress.setAccount(account);
+            progress.setReadingDate(today);
+            progress.setTotalSeconds(0);
+            progress.setTotalPoints(0);
+        }
 
         ReadingProgress progress = readingProgressRepository
                 .findByAccountIdAndReadingDate(userId, today)
@@ -35,24 +50,26 @@ public class ReadingProgressService {
                         .totalPoints(0)
                         .build());
 
-        int oldTotalSeconds = progress.getTotalSeconds();
-        int newTotalSeconds = oldTotalSeconds + secondsRead;
-        progress.setTotalSeconds(newTotalSeconds);
 
-        int new5MinuteBlocks = newTotalSeconds / SECONDS_PER_5_MINUTES;
-        int old5MinuteBlocks = oldTotalSeconds / SECONDS_PER_5_MINUTES;
-        int additional5MinuteBlocks = new5MinuteBlocks - old5MinuteBlocks;
+    public ReadingProgress getProgress(Integer userId) {
+        Account account = accountRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        LocalDate today = LocalDate.now();
 
-        if (additional5MinuteBlocks > 0) {
-            int newPoints = Math.min(
-                    progress.getTotalPoints() + (additional5MinuteBlocks * POINTS_PER_5_MINUTES),
-                    MAX_POINTS_PER_DAY);
-            progress.setTotalPoints(newPoints);
-            account.setBonusPoint(account.getBonusPoint() + 5);
+        // Tìm record
+        Optional<ReadingProgress> optional = readingProgressRepository.findByAccountIdAndReadingDate(userId, today);
+
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            ReadingProgress newProgress = ReadingProgress.builder()
+                    .account(account)
+                    .readingDate(today)
+                    .totalSeconds(0)
+                    .totalPoints(0)
+                    .build();
+            readingProgressRepository.save(newProgress);
+            return newProgress;
         }
-
-        readingProgressRepository.save(progress);
-        accountRepository.save(account);
-        return progress;
     }
 }

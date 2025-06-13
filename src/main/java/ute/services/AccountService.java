@@ -15,7 +15,6 @@ import ute.entity.Account;
 import ute.enums.Roles;
 import ute.exception.AppException;
 import ute.exception.ErrorCode;
-import ute.mapper.AccountMapper;
 import ute.repository.AccountRepository;
 
 import java.util.HashSet;
@@ -27,7 +26,6 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class AccountService {
     AccountRepository accountRepository;
-    AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
 
     @PreAuthorize("hasRole('ADMIN')") // set quyền cho chuc nang getAllAccounts, xet quyen truoc khi thuc hien chuc nang

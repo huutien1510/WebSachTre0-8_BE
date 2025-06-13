@@ -25,7 +25,6 @@ import ute.entity.Cart;
 import ute.enums.Roles;
 import ute.exception.AppException;
 import ute.exception.ErrorCode;
-import ute.mapper.AccountMapper;
 import ute.repository.AccountRepository;
 import ute.util.EmailUtil;
 
@@ -45,7 +44,6 @@ public class AuthService {
     final AccountRepository accountRepository;
     final PointService pointService;
     final EmailUtil emailUtil;
-    AccountMapper accountMapper;
     @NonFinal
     @Value("${signer.key}")
     String SIGNER_KEY;

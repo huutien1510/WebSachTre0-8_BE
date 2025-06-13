@@ -50,6 +50,8 @@ public enum ErrorCode {
     VOUCHER_EXPIRED(400,HttpStatus.BAD_REQUEST, "Voucher đã hết hạn"),
     CHAPTER_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Chương không tồn tại"),
     READING_SESSION_ACTIVE(400,HttpStatus.BAD_REQUEST, "Bạn đang có phiên đọc truyện khác"),
+    READING_PROGRESS_NOT_FOUND(404,HttpStatus.NOT_FOUND, "Phiên đọc truyện không tồn tại"),
+
     ;
 
     private int status;
